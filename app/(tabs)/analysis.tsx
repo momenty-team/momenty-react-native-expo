@@ -1,13 +1,14 @@
-import { StyleSheet } from 'react-native';
-import { View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
-export default function HomeScreen() {
+function Analysis() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>모먼티!</Text>
+      <Text style={styles.text}>analysis</Text>
     </View>
   );
 }
+
+export default Analysis;
 
 const styles = StyleSheet.create({
   container: {

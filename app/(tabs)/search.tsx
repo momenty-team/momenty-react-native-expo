@@ -1,13 +1,14 @@
-import { StyleSheet } from 'react-native';
-import { View, Text } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 
-export default function HomeScreen() {
+function Search() {
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>모먼티!</Text>
+      <Text style={styles.text}>Search</Text>
     </View>
   );
 }
+
+export default Search;
 
 const styles = StyleSheet.create({
   container: {
