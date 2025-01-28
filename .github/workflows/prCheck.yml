@@ -1,0 +1,30 @@
+name: check tsc and lint
+on:
+  push:
+    branches:
+      - main
+      - develop
+      - hotfix
+  pull_request:
+    branches:
+      - main
+      - develop
+      - hotfix
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: check tsc & lint
+        run: npm run check
