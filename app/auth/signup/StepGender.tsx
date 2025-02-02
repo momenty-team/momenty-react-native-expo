@@ -16,7 +16,7 @@ export default function SignupScreen() {
             { backgroundColor: pressed ? '#021730' : '#E8EBEF' },
           ]}
         >
-          <Link href="/(tabs)" asChild>
+          <Link href="/auth/signup/StepExplanation" asChild>
             <Text style={styles.buttonText}>여성</Text>
           </Link>
         </Pressable>
@@ -26,7 +26,7 @@ export default function SignupScreen() {
             { backgroundColor: pressed ? '#021730' : '#E8EBEF' },
           ]}
         >
-          <Link href="/(tabs)" asChild>
+          <Link href="/auth/signup/StepExplanation" asChild>
             <Text style={styles.buttonText}>남성</Text>
           </Link>
         </Pressable>
