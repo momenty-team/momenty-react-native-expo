@@ -1,8 +1,14 @@
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
 export default function Alarm() {
+  const router = useRouter();
+
+  const nextStep = () => {
+    router.push('/');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -15,11 +21,9 @@ export default function Alarm() {
       </View>
       <View style={styles.buttonWrapper}>
         <Text style={styles.label}>나중에 할게요.</Text>
-        <Link href="/(tabs)" asChild>
-          <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>알림 허용</Text>
-          </Pressable>
-        </Link>
+        <Pressable style={styles.button} onPress={nextStep}>
+          <Text style={styles.buttonText}>알림 허용</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -55,12 +59,13 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     display: 'flex',
+    marginBottom: 12,
   },
   button: {
     backgroundColor: '#021730',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
     marginTop: 32,
   },

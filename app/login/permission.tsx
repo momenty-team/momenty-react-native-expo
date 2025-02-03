@@ -1,8 +1,14 @@
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
 export default function Permission() {
+  const router = useRouter();
+
+  const nextStep = () => {
+    router.push('/login/nickname');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -16,11 +22,9 @@ export default function Permission() {
       <View style={styles.buttonWrapper}>
         <Text style={styles.label}>개인정보는 저장하거나 공유하지 않아요.</Text>
         <Text style={styles.label}>모먼티가 정확하게 분석 할 수 있도록 모두 허용해주세요.</Text>
-        <Link href="/login/nickname" asChild>
-          <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>계속하기</Text>
-          </Pressable>
-        </Link>
+        <Pressable style={styles.button} onPress={nextStep}>
+          <Text style={styles.buttonText}>계속하기</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -56,12 +60,13 @@ const styles = StyleSheet.create({
   },
   buttonWrapper: {
     display: 'flex',
+    marginBottom: 12,
   },
   button: {
     backgroundColor: '#021730',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
     marginTop: 32,
   },

@@ -1,8 +1,14 @@
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
 export default function Login() {
+  const router = useRouter();
+
+  const nextStep = () => {
+    router.push('/login/permission');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -14,11 +20,9 @@ export default function Login() {
         <Text style={styles.subTitle}>모먼티가 분석한 정보를 간편하게 확인하세요.</Text>
       </View>
       <View style={styles.buttonWrapper}>
-        <Link href="/login/permission" asChild style={styles.button}>
-          {/* <Pressable style={styles.button}> */}
+        <Pressable style={styles.button} onPress={nextStep}>
           <Text style={styles.buttonText}>Apple로 로그인</Text>
-          {/* </Pressable> */}
-        </Link>
+        </Pressable>
         <Text style={styles.label}>로그인 시, 해당 약관에 동의한 것으로 간주합니다.</Text>
       </View>
     </View>
@@ -54,13 +58,16 @@ const styles = StyleSheet.create({
     color: '#5A6B7F',
   },
   buttonWrapper: {
+    display: 'flex',
+    flexDirection: 'column',
     gap: 8,
+    marginBottom: 12,
   },
   button: {
     backgroundColor: '#021730',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
   },
   buttonText: {

@@ -1,9 +1,19 @@
 import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, TextInput, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Pressable,
+  TextInput,
+  Alert,
+  KeyboardAvoidingView,
+  Platform,
+} from 'react-native';
 
 export default function Birth() {
   const [birthDay, setBirthDay] = useState('');
+  const [isInputFocused, setIsInputFocused] = useState(true);
   const router = useRouter();
 
   const inputHandler = () => {
@@ -27,14 +37,20 @@ export default function Birth() {
           placeholder="8자리로 입력해주세요."
           value={birthDay}
           onChangeText={setBirthDay}
+          onFocus={() => setIsInputFocused(true)}
+          onBlur={() => setIsInputFocused(false)}
           keyboardType="number-pad"
-          returnKeyType="done"
           autoFocus
         />
       </View>
-      <Pressable style={styles.button} onPress={inputHandler}>
-        <Text style={styles.buttonText}>확인</Text>
-      </Pressable>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
+        <Pressable
+          style={isInputFocused ? styles.buttonFocus : styles.button}
+          onPress={inputHandler}
+        >
+          <Text style={styles.buttonText}>확인</Text>
+        </Pressable>
+      </KeyboardAvoidingView>
     </View>
   );
 }
@@ -45,10 +61,10 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingTop: 119,
     paddingBottom: 42,
-    paddingHorizontal: 24,
   },
   titleContainer: {
     display: 'flex',
+    paddingHorizontal: 24,
   },
   titleWrapper: {
     display: 'flex',
@@ -68,20 +84,34 @@ const styles = StyleSheet.create({
     color: '#5A6B7F',
   },
   input: {
+    fontFamily: 'SUIT Variable',
+    fontSize: 20,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 24,
+    letterSpacing: -0.2,
     borderBottomWidth: 4,
     borderColor: '#5A6B7F',
-    paddingVertical: 10,
+    paddingVertical: 4,
     width: '100%',
-    fontSize: 16,
     marginTop: 4,
+  },
+  buttonFocus: {
+    backgroundColor: '#021730',
+    paddingVertical: 16,
+    paddingHorizontal: 32,
+    alignItems: 'center',
+    marginTop: 32,
   },
   button: {
     backgroundColor: '#021730',
-    paddingVertical: 12,
+    paddingVertical: 16,
     paddingHorizontal: 32,
-    borderRadius: 8,
+    marginHorizontal: 24,
+    borderRadius: 12,
     alignItems: 'center',
     marginTop: 32,
+    marginBottom: 12,
   },
   buttonText: {
     fontFamily: 'SUIT Variable',

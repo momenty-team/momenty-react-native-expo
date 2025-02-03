@@ -1,8 +1,16 @@
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import type { GestureResponderEvent } from 'react-native';
 
 export default function Gender() {
+  const router = useRouter();
+
+  const nextStep = (gender: '남성' | '여성') => (_: GestureResponderEvent) => {
+    router.push('/login/explain');
+    console.log(gender);
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -15,20 +23,18 @@ export default function Gender() {
             styles.button,
             { backgroundColor: pressed ? '#021730' : '#E8EBEF' },
           ]}
+          onPress={nextStep('여성')}
         >
-          <Link href="/login/gender" asChild>
-            <Text style={styles.buttonText}>여성</Text>
-          </Link>
+          <Text style={styles.buttonText}>여성</Text>
         </Pressable>
         <Pressable
           style={({ pressed }) => [
             styles.button,
             { backgroundColor: pressed ? '#021730' : '#E8EBEF' },
           ]}
+          onPress={nextStep('남성')}
         >
-          <Link href="/login/explain" asChild>
-            <Text style={styles.buttonText}>남성</Text>
-          </Link>
+          <Text style={styles.buttonText}>남성</Text>
         </Pressable>
       </View>
     </View>
@@ -62,7 +68,7 @@ const styles = StyleSheet.create({
     width: '46%',
     paddingVertical: 80,
     paddingHorizontal: 60,
-    borderRadius: 8,
+    borderRadius: 12,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',

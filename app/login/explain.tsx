@@ -1,8 +1,14 @@
-import { Link } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
 export default function Explain() {
+  const router = useRouter();
+
+  const nextStep = () => {
+    router.push('/login/alarm');
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -15,11 +21,9 @@ export default function Explain() {
       </View>
       <View style={styles.buttonWrapper}>
         <Text style={styles.label}>모먼티가요 을매나 좋게요</Text>
-        <Link href="/login/explain" asChild>
-          <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>앱 설명</Text>
-          </Pressable>
-        </Link>
+        <Pressable style={styles.button} onPress={nextStep}>
+          <Text style={styles.buttonText}>앱 설명</Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -60,7 +64,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#021730',
     paddingVertical: 12,
     paddingHorizontal: 32,
-    borderRadius: 8,
+    borderRadius: 12,
     alignItems: 'center',
     marginTop: 32,
   },
