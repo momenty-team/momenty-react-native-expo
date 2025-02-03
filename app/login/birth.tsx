@@ -32,16 +32,18 @@ export default function Birth() {
           <Text style={styles.title}>알려주세요.</Text>
         </View>
         <Text style={styles.inputLabel}>생년월일</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="8자리로 입력해주세요."
-          value={birthDay}
-          onChangeText={setBirthDay}
-          onFocus={() => setIsInputFocused(true)}
-          onBlur={() => setIsInputFocused(false)}
-          keyboardType="number-pad"
-          autoFocus
-        />
+        <View style={styles.inputWrapper}>
+          <TextInput
+            style={styles.input}
+            placeholder="8자리로 입력해주세요."
+            value={birthDay}
+            onChangeText={setBirthDay}
+            onFocus={() => setIsInputFocused(true)}
+            onBlur={() => setIsInputFocused(false)}
+            keyboardType="number-pad"
+            autoFocus
+          />
+        </View>
       </View>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Pressable
@@ -59,7 +61,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: 119,
+    paddingTop: 116,
     paddingBottom: 42,
   },
   titleContainer: {
@@ -83,18 +85,22 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#5A6B7F',
   },
+  inputWrapper: {
+    marginTop: 4,
+    width: '100%',
+    height: 48,
+    borderBottomWidth: 4,
+    borderColor: '#5A6B7F',
+  },
   input: {
     fontFamily: 'SUIT Variable',
     fontSize: 20,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 24,
-    letterSpacing: -0.2,
-    borderBottomWidth: 4,
-    borderColor: '#5A6B7F',
-    paddingVertical: 4,
+    lineHeight: 28,
+    height: '100%',
+    letterSpacing: 0.4,
     width: '100%',
-    marginTop: 4,
   },
   buttonFocus: {
     backgroundColor: '#021730',
@@ -111,7 +117,7 @@ const styles = StyleSheet.create({
     borderRadius: 12,
     alignItems: 'center',
     marginTop: 32,
-    marginBottom: 12,
+    marginBottom: 54,
   },
   buttonText: {
     fontFamily: 'SUIT Variable',

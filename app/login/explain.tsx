@@ -33,8 +33,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: 107,
-    paddingBottom: 42,
+    paddingTop: 116,
+    paddingBottom: 54,
     paddingHorizontal: 24,
   },
   titleContainer: {

@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: 107,
+    paddingTop: 116,
     paddingBottom: 42,
     paddingHorizontal: 24,
   },

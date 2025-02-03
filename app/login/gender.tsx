@@ -21,7 +21,7 @@ export default function Gender() {
         <Pressable
           style={({ pressed }) => [
             styles.button,
-            { backgroundColor: pressed ? '#021730' : '#E8EBEF' },
+            { backgroundColor: pressed ? '#D6DAE0' : '#E8EBEF' },
           ]}
           onPress={nextStep('여성')}
         >
@@ -30,7 +30,7 @@ export default function Gender() {
         <Pressable
           style={({ pressed }) => [
             styles.button,
-            { backgroundColor: pressed ? '#021730' : '#E8EBEF' },
+            { backgroundColor: pressed ? '#D6DAE0' : '#E8EBEF' },
           ]}
           onPress={nextStep('남성')}
         >
@@ -44,7 +44,7 @@ export default function Gender() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingTop: 119,
+    paddingTop: 116,
     paddingBottom: 18,
     paddingHorizontal: 24,
   },

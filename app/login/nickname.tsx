@@ -25,14 +25,14 @@ export default function Nickname() {
   };
 
   return (
-    <>
-      <View style={styles.container}>
-        <View style={styles.titleContainer}>
-          <View style={styles.titleWrapper}>
-            <Text style={styles.title}>가입을 축하드려요!</Text>
-            <Text style={styles.title}>어떻게 불러드리면 될까요?</Text>
-          </View>
-          <Text style={styles.inputLabel}>닉네임</Text>
+    <View style={styles.container}>
+      <View style={styles.titleContainer}>
+        <View style={styles.titleWrapper}>
+          <Text style={styles.title}>가입을 축하드려요!</Text>
+          <Text style={styles.title}>어떻게 불러드리면 될까요?</Text>
+        </View>
+        <Text style={styles.inputLabel}>닉네임</Text>
+        <View style={styles.inputWrapper}>
           <TextInput
             style={styles.input}
             value={nickname}
@@ -51,7 +51,7 @@ export default function Nickname() {
           <Text style={styles.buttonText}>확인</Text>
         </Pressable>
       </KeyboardAvoidingView>
-    </>
+    </View>
   );
 }
 
@@ -59,12 +59,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     justifyContent: 'space-between',
-    paddingTop: 119,
+    paddingTop: 116,
     paddingBottom: 42,
-    paddingHorizontal: 24,
   },
   titleContainer: {
     display: 'flex',
+    paddingHorizontal: 24,
   },
   titleWrapper: {
     display: 'flex',
@@ -83,18 +83,22 @@ const styles = StyleSheet.create({
     lineHeight: 20,
     color: '#5A6B7F',
   },
+  inputWrapper: {
+    marginTop: 4,
+    width: '100%',
+    height: 48,
+    borderBottomWidth: 4,
+    borderColor: '#5A6B7F',
+  },
   input: {
     fontFamily: 'SUIT Variable',
     fontSize: 20,
     fontStyle: 'normal',
     fontWeight: '600',
-    lineHeight: 24,
+    lineHeight: 28,
+    height: '100%',
     letterSpacing: -0.2,
-    borderBottomWidth: 4,
-    borderColor: '#5A6B7F',
     width: '100%',
-    marginTop: 4,
-    paddingVertical: 4,
   },
   buttonFocus: {
     backgroundColor: '#021730',
