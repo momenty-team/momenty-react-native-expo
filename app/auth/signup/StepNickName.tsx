@@ -27,6 +27,7 @@ export default function StepNickName() {
           value={nickname}
           onChangeText={setNickname}
           returnKeyType="done"
+          autoFocus
         />
       </View>
       <Pressable style={styles.button} onPress={inputHandler}>

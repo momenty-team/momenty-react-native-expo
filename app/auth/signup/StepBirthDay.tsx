@@ -29,6 +29,7 @@ export default function StepBirthDay() {
           onChangeText={setBirthDay}
           keyboardType="number-pad"
           returnKeyType="done"
+          autoFocus
         />
       </View>
       <Pressable style={styles.button} onPress={inputHandler}>
