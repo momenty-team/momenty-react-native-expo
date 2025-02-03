@@ -1,8 +1,8 @@
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, TextInput, Alert } from 'react-native';
 
-export default function StepBirthDay() {
+export default function Birth() {
   const [birthDay, setBirthDay] = useState('');
   const router = useRouter();
 
@@ -11,7 +11,7 @@ export default function StepBirthDay() {
       Alert.alert('생년월일을 입력해주세요.');
       return;
     }
-    router.push('/auth/signup/StepGender');
+    router.push('/login/gender');
   };
 
   return (

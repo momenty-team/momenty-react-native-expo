@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-export default function StepPermission() {
+export default function Permission() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -16,7 +16,7 @@ export default function StepPermission() {
       <View style={styles.buttonWrapper}>
         <Text style={styles.label}>개인정보는 저장하거나 공유하지 않아요.</Text>
         <Text style={styles.label}>모먼티가 정확하게 분석 할 수 있도록 모두 허용해주세요.</Text>
-        <Link href="/auth/signup/StepNickName" asChild>
+        <Link href="/login/nickname" asChild>
           <Pressable style={styles.button}>
             <Text style={styles.buttonText}>계속하기</Text>
           </Pressable>

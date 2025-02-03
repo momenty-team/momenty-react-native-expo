@@ -2,7 +2,7 @@ import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, TextInput, Alert } from 'react-native';
 
-export default function StepNickName() {
+export default function Nickname() {
   const [nickname, setNickname] = useState('');
   const router = useRouter();
 
@@ -11,7 +11,7 @@ export default function StepNickName() {
       Alert.alert('닉네임을 입력해주세요.');
       return;
     }
-    router.push('/auth/signup/StepBirthDay');
+    router.push('/login/birth');
   };
 
   return (

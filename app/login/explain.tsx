@@ -2,22 +2,22 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-export default function StepPermission() {
+export default function Explain() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>모먼티가 제공하는</Text>
-          <Text style={styles.title}>기록 알림을 받아볼까요?</Text>
+          <Text style={styles.title}>앱설명설명</Text>
+          <Text style={styles.title}>설명설명설명설명</Text>
         </View>
-        <Text style={styles.subTitle}>모먼티가 기록을 쉽게 할 수 있게 도와줘요.</Text>
-        <Text style={styles.subTitle}>기록과 분석이 끝난 정보를 빠르게 확인해봐요.</Text>
+        <Text style={styles.subTitle}>어쩌구저쩌구어쩌구저쩌구</Text>
+        <Text style={styles.subTitle}>궁시렁궁시렁</Text>
       </View>
       <View style={styles.buttonWrapper}>
-        <Text style={styles.label}>나중에 할게요.</Text>
-        <Link href="/(tabs)" asChild>
+        <Text style={styles.label}>모먼티가요 을매나 좋게요</Text>
+        <Link href="/login/explain" asChild>
           <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>알림 허용</Text>
+            <Text style={styles.buttonText}>앱 설명</Text>
           </Pressable>
         </Link>
       </View>

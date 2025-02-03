@@ -2,7 +2,7 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-export default function SignupScreen() {
+export default function Gender() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -16,7 +16,7 @@ export default function SignupScreen() {
             { backgroundColor: pressed ? '#021730' : '#E8EBEF' },
           ]}
         >
-          <Link href="/auth/signup/StepExplanation" asChild>
+          <Link href="/login/gender" asChild>
             <Text style={styles.buttonText}>여성</Text>
           </Link>
         </Pressable>
@@ -26,7 +26,7 @@ export default function SignupScreen() {
             { backgroundColor: pressed ? '#021730' : '#E8EBEF' },
           ]}
         >
-          <Link href="/auth/signup/StepExplanation" asChild>
+          <Link href="/login/explain" asChild>
             <Text style={styles.buttonText}>남성</Text>
           </Link>
         </Pressable>

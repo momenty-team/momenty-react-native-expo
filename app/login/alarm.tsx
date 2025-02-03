@@ -2,24 +2,24 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-export default function SignupScreen() {
+export default function Alarm() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>일상 속 순간들,</Text>
-          <Text style={styles.title}>모먼티로 기록하세요.</Text>
+          <Text style={styles.title}>모먼티가 제공하는</Text>
+          <Text style={styles.title}>기록 알림을 받아볼까요?</Text>
         </View>
-        <Text style={styles.subTitle}>나만의 라이프 스타일로 기록하고,</Text>
-        <Text style={styles.subTitle}>모먼티가 분석한 정보를 간편하게 확인하세요.</Text>
+        <Text style={styles.subTitle}>모먼티가 기록을 쉽게 할 수 있게 도와줘요.</Text>
+        <Text style={styles.subTitle}>기록과 분석이 끝난 정보를 빠르게 확인해봐요.</Text>
       </View>
       <View style={styles.buttonWrapper}>
-        <Link href="/auth/signup/StepPermission" asChild>
+        <Text style={styles.label}>나중에 할게요.</Text>
+        <Link href="/(tabs)" asChild>
           <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>Apple로 로그인</Text>
+            <Text style={styles.buttonText}>알림 허용</Text>
           </Pressable>
         </Link>
-        <Text style={styles.label}>로그인 시, 해당 약관에 동의한 것으로 간주합니다.</Text>
       </View>
     </View>
   );
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingTop: 107,
-    paddingBottom: 18,
+    paddingBottom: 42,
     paddingHorizontal: 24,
   },
   titleContainer: {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     color: '#5A6B7F',
   },
   buttonWrapper: {
-    gap: 8,
+    display: 'flex',
   },
   button: {
     backgroundColor: '#021730',
@@ -62,6 +62,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 8,
     alignItems: 'center',
+    marginTop: 32,
   },
   buttonText: {
     fontFamily: 'SUIT Variable',
@@ -73,10 +74,10 @@ const styles = StyleSheet.create({
   label: {
     display: 'flex',
     textAlign: 'center',
-    color: '#99A5B4',
+    color: '#5A6B7F',
     fontFamily: 'SUIT Variable',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: 500,
-    lineHeight: 16,
+    lineHeight: 20,
   },
 });

@@ -2,24 +2,24 @@ import { Link } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
-export default function StepExplanation() {
+export default function Login() {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>앱설명설명</Text>
-          <Text style={styles.title}>설명설명설명설명</Text>
+          <Text style={styles.title}>일상 속 순간들,</Text>
+          <Text style={styles.title}>모먼티로 기록하세요.</Text>
         </View>
-        <Text style={styles.subTitle}>어쩌구저쩌구어쩌구저쩌구</Text>
-        <Text style={styles.subTitle}>궁시렁궁시렁</Text>
+        <Text style={styles.subTitle}>나만의 라이프 스타일로 기록하고,</Text>
+        <Text style={styles.subTitle}>모먼티가 분석한 정보를 간편하게 확인하세요.</Text>
       </View>
       <View style={styles.buttonWrapper}>
-        <Text style={styles.label}>모먼티가요 을매나 좋게요</Text>
-        <Link href="/auth/signup/StepAlarm" asChild>
-          <Pressable style={styles.button}>
-            <Text style={styles.buttonText}>앱 설명</Text>
-          </Pressable>
+        <Link href="/login/permission" asChild style={styles.button}>
+          {/* <Pressable style={styles.button}> */}
+          <Text style={styles.buttonText}>Apple로 로그인</Text>
+          {/* </Pressable> */}
         </Link>
+        <Text style={styles.label}>로그인 시, 해당 약관에 동의한 것으로 간주합니다.</Text>
       </View>
     </View>
   );
@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-between',
     paddingTop: 107,
-    paddingBottom: 42,
+    paddingBottom: 18,
     paddingHorizontal: 24,
   },
   titleContainer: {
@@ -54,7 +54,7 @@ const styles = StyleSheet.create({
     color: '#5A6B7F',
   },
   buttonWrapper: {
-    display: 'flex',
+    gap: 8,
   },
   button: {
     backgroundColor: '#021730',
@@ -62,7 +62,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 8,
     alignItems: 'center',
-    marginTop: 32,
   },
   buttonText: {
     fontFamily: 'SUIT Variable',
@@ -74,10 +73,10 @@ const styles = StyleSheet.create({
   label: {
     display: 'flex',
     textAlign: 'center',
-    color: '#5A6B7F',
+    color: '#99A5B4',
     fontFamily: 'SUIT Variable',
-    fontSize: 14,
+    fontSize: 13,
     fontWeight: 500,
-    lineHeight: 20,
+    lineHeight: 16,
   },
 });
