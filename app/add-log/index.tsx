@@ -7,7 +7,7 @@ export default function WebViewScreen() {
 
   return (
     <WebView
-      source={{ uri: 'http://172.19.87.32:3000/' }}
+      source={{ uri: 'http://172.19.83.8:3000/' }}
       style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#F4F6F9' }}
     />
   );
