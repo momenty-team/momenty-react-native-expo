@@ -1,5 +1,6 @@
 import React from 'react';
 import { Tabs } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import HomeIcon from '@/assets/svg/HomeIcon';
 import ChartIcon from '@/assets/svg/ChartIcon';
 import SearchIcon from '@/assets/svg/SearchIcon';
@@ -10,11 +11,13 @@ const ACTIVE_COLOR = '#021730';
 const INACTIVE_COLOR = '#99A5B4';
 
 export default function TabLayout() {
+  const insets = useSafeAreaInsets();
+
   return (
     <Tabs
       screenOptions={{
         headerShown: false,
-        tabBarStyle: styles.tab,
+        tabBarStyle: [styles.tab, { padding: insets.bottom }],
         tabBarLabelStyle: styles.label,
         tabBarActiveTintColor: ACTIVE_COLOR,
         tabBarInactiveTintColor: INACTIVE_COLOR,
