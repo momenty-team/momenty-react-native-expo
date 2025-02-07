@@ -1,13 +1,20 @@
 import { Button, StyleSheet } from 'react-native';
 import { View, Text } from 'react-native';
 import { useRouter } from 'expo-router';
+import React from 'react';
+import { WebView } from 'react-native-webview';
 
 export default function HomeScreen() {
   const router = useRouter();
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>홈</Text>
       <Button title="회원가입" onPress={() => router.push('/login')} />
+      <Button title="add-log" onPress={() => router.push('/add-log')} />
+      {/* <WebView
+        source={{
+          uri: 'http://192.168.50.144:3000/',
+        }}
+      /> */}
     </View>
   );
 }
@@ -17,7 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
     justifyContent: 'center',
-    padding: 16,
+    paddingTop: 56,
   },
   text: {
     fontSize: 16,
