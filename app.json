@@ -8,6 +8,7 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
+    "jsEngine": "hermes",
     "splash": {
       "image": "./assets/images/splash.png",
       "resizeMode": "contain",
@@ -15,6 +16,7 @@
     },
     "ios": {
       "supportsTablet": true,
+      "jsEngine": "jsc",
       "splash": {
         "image": "./assets/images/splash.png",
         "resizeMode": "contain",
@@ -42,7 +44,8 @@
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
