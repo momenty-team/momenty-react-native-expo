@@ -7,7 +7,7 @@ export default function RootLayout() {
     SUIT: require('../assets/fonts/SUIT-Variable.ttf'),
   });
   return (
-    <Stack>
+    <Stack screenOptions={{ headerShown: false }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="login" options={{ title: '회원가입', headerShown: false }} />
       <Stack.Screen name="+not-found" />
