@@ -10,11 +10,6 @@ export default function HomeScreen() {
       <Button title="회원가입" onPress={() => router.push('/login')} />
       <Button title="add-log" onPress={() => router.push('/add-log')} />
       <Button title="calendar" onPress={() => router.push('/calendar')} />
-      {/* <WebView
-        source={{
-          uri: 'http://192.168.50.144:3000/',
-        }}
-      /> */}
     </View>
   );
 }
