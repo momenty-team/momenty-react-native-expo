@@ -1,4 +1,3 @@
-import { StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
 
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -33,7 +32,7 @@ function User() {
 
   return (
     <WebView
-      source={{ uri: `http://172.19.83.8:3000/user` }}
+      source={{ uri: `http://172.19.87.70:3000/user` }}
       injectedJavaScript={injectedCSS}
       onMessage={(_) => {}}
       style={{ flex: 1 }}
@@ -42,12 +41,3 @@ function User() {
 }
 
 export default User;
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
-  webview: {
-    flex: 1,
-  },
-});
