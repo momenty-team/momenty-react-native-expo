@@ -3,21 +3,18 @@ import { WebView } from 'react-native-webview';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 
-export default function AddLog() {
+export default function WebViewScreen() {
     const insets = useSafeAreaInsets();
     const [notchHeight, setNotchHeight] = useState(0);
     
     useEffect(() => {
       setNotchHeight(insets.top);
     }, [insets]);
-  
+
     const injectedCSS = `
       const style = document.createElement('style');
       style.innerHTML = \`
-        body {
-          padding-top: ${notchHeight}px !important;
-        }
-  
+
         * {
           -webkit-user-select: none;
           -moz-user-select: none;
@@ -32,9 +29,9 @@ export default function AddLog() {
 
   return (
     <WebView
+      source={{ uri: `${WEBVIEW_BASE_URL}/add-log` }}
       injectedJavaScript={injectedCSS}
       onMessage={(_) => {}}
-      source={{ uri: `${WEBVIEW_BASE_URL}/add-log` }}
       style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#F4F6F9' }}
     />
   );

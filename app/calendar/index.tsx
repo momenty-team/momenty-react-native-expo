@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { WebView } from 'react-native-webview';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { WEBVIEW_BASE_URL } from '@/constants/environment';
 
 function WebViewScreen() {
   const insets = useSafeAreaInsets();
@@ -13,9 +14,6 @@ function WebViewScreen() {
   const injectedCSS = `
     const style = document.createElement('style');
     style.innerHTML = \`
-      body {
-        padding-top: ${notchHeight}px !important;
-      }
 
       * {
         -webkit-user-select: none;
@@ -37,7 +35,7 @@ function WebViewScreen() {
 
   return (
       <WebView
-        source={{ uri: 'http://192.168.184.27:3000/calendar' }}
+        source={{ uri: `${WEBVIEW_BASE_URL}/calendar` }}
         injectedJavaScript={injectedCSS}
         onMessage={(_) => { }}
         style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#F4F6F9' }}
