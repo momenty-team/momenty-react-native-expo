@@ -1,7 +1,7 @@
-import WebView from 'react-native-webview';
-
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
+import { WEBVIEW_BASE_URL } from '@/constants/environment';
+import WebView from 'react-native-webview';
 
 function User() {
   const insets = useSafeAreaInsets();
@@ -32,7 +32,7 @@ function User() {
 
   return (
     <WebView
-      source={{ uri: `http://172.19.87.70:3000/user` }}
+      source={{ uri: `${WEBVIEW_BASE_URL}/user` }}
       injectedJavaScript={injectedCSS}
       onMessage={(_) => {}}
       style={{ flex: 1 }}

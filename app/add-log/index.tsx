@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { WebView } from 'react-native-webview';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { WEBVIEW_BASE_URL } from '@/constants/environment';
 
-export default function WebViewScreen() {
+export default function AddLog() {
     const insets = useSafeAreaInsets();
     const [notchHeight, setNotchHeight] = useState(0);
     
@@ -31,9 +32,9 @@ export default function WebViewScreen() {
 
   return (
     <WebView
-      source={{ uri: 'http://192.168.184.27:3000/add-log' }}
       injectedJavaScript={injectedCSS}
       onMessage={(_) => {}}
+      source={{ uri: `${WEBVIEW_BASE_URL}/add-log` }}
       style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#F4F6F9' }}
     />
   );
