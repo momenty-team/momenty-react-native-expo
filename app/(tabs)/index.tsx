@@ -10,6 +10,7 @@ export default function HomeScreen() {
     <View style={styles.container}>
       <Button title="회원가입" onPress={() => router.push('/login')} />
       <Button title="add-log" onPress={() => router.push('/add-log')} />
+      <Button title="calendar" onPress={() => router.push('/calendar')} />
     </View>
   );
 }
