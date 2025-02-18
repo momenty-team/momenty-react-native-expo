@@ -4,7 +4,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 
-function WebViewScreen() {
+function Calendar() {
   const insets = useSafeAreaInsets();
 
   return (
@@ -17,4 +17,4 @@ function WebViewScreen() {
   );
 }
 
-export default WebViewScreen;
+export default Calendar;
