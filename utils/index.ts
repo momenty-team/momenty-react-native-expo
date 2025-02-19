@@ -1,6 +1,5 @@
-import type { BridgeRoute } from "@/types";
-import { router } from "expo-router";
-
+import type { BridgeRoute } from '@/types';
+import { router } from 'expo-router';
 
 export const navigateFromWebView = (route?: BridgeRoute) => {
   try {
@@ -19,4 +18,4 @@ export const navigateFromWebView = (route?: BridgeRoute) => {
     console.log('전달받은 route의 구조가 올바르지 않습니다.');
     console.error(error);
   }
-}
+};
