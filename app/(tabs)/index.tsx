@@ -29,7 +29,7 @@ export default function HomeScreen() {
       source={{ uri: `${WEBVIEW_BASE_URL}` }}
       injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
       onMessage={handleMessage}
-      style={{ flex: 1 }}
+      style={{ flex: 1, backgroundColor: '#F4F6F9' }}
     />
   );
 }

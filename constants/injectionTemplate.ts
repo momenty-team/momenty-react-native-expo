@@ -14,7 +14,7 @@ export const injectionTemplate = (config?: InjectionTemplate) => {
 
   const safeAreaTopInsetTemplate = (height?: number) => {
     if (height) {
-      return `body { padding-top: ${height}px !important; }`;
+      return `main { padding-top: ${height}px !important; }`;
     }
 
     return '';
