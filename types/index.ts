@@ -1,7 +1,12 @@
-import { Href } from "expo-router";
+import { Href } from 'expo-router';
 
-export type BridgeRoute = Href | "goBack";
+export type BridgeRoute = Href | 'goBack';
 
-export interface BrigdeData {
+export interface BridgeData {
   route?: BridgeRoute;
+  bottomSheet?: {
+    name: string;
+    state: 'open' | 'close';
+    webviewRoute?: string;
+  };
 }
