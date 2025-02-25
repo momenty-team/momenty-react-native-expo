@@ -14,6 +14,8 @@ export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const [notchHeight, setNotchHeight] = useState(0);
   const bottomSheetRef = useRef<BottomSheet>(null);
+  const webViewRef = useRef<WebView>(null);
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   useEffect(() => {
     setNotchHeight(insets.top);
@@ -26,9 +28,33 @@ export default function HomeScreen() {
       navigateFromWebView(route);
     }
 
-    if (bottomSheet && bottomSheet.state === 'open') {
-      bottomSheetRef.current?.expand();
+    if (bottomSheet) {
+      if (bottomSheet.state === 'open') {
+        bottomSheetRef.current?.snapToIndex(bottomSheet.snapIndex);
+      }
+
+      if (bottomSheet.state === 'hold') {
+        if (!isBottomSheetOpen && bottomSheet.snapIndex === 0) return;
+
+        bottomSheetRef.current?.snapToIndex(bottomSheet.snapIndex);
+      }
     }
+  };
+
+  const handleSheetChange = (index: number) => {
+    if (index === -1) {
+      return setIsBottomSheetOpen(false);
+    }
+
+    console.log('index', index);
+
+    webViewRef?.current?.postMessage(
+      JSON.stringify({
+        bottomSheet: { name: 'log-detail', state: 'hold', snapIndex: index === 2 ? 1 : index },
+      })
+    );
+
+    return setIsBottomSheetOpen(true);
   };
 
   return (
@@ -41,17 +67,24 @@ export default function HomeScreen() {
       />
 
       <BottomSheet
-        snapPoints={['50%']}
+        snapPoints={['50%', '90%']}
         ref={bottomSheetRef}
         enablePanDownToClose
         enableContentPanningGesture={false}
         index={-1}
+        onChange={handleSheetChange}
+        onClose={() => {
+          webViewRef?.current?.postMessage(
+            JSON.stringify({ bottomSheet: { name: 'log-detail', state: 'close' } })
+          );
+        }}
       >
         <BottomSheetView style={styles.contentContainer}>
           <WebView
+            ref={webViewRef}
             source={{ uri: `${WEBVIEW_BASE_URL}/log-detail` }}
             injectedJavaScript={injectionTemplate()}
-            onMessage={(_) => {}}
+            onMessage={handleMessage}
             style={styles.contentContainer}
           />
         </BottomSheetView>
