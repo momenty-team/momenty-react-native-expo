@@ -6,6 +6,7 @@ import ChartIcon from '@/assets/svg/ChartIcon';
 import SearchIcon from '@/assets/svg/SearchIcon';
 import HamburgerIcon from '@/assets/svg/HamburgerIcon';
 import { styles } from './TabLayout.styles';
+import * as Haptics from 'expo-haptics';
 
 const ACTIVE_COLOR = '#021730';
 const INACTIVE_COLOR = '#99A5B4';
@@ -21,6 +22,11 @@ export default function TabLayout() {
         tabBarLabelStyle: styles.label,
         tabBarActiveTintColor: ACTIVE_COLOR,
         tabBarInactiveTintColor: INACTIVE_COLOR,
+      }}
+      screenListeners={{
+        tabPress: () => {
+          Haptics.selectionAsync();
+        },
       }}
     >
       <Tabs.Screen

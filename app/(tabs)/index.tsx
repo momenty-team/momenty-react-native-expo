@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
+import { Button, StyleSheet, Text, View } from 'react-native';
 import WebView from 'react-native-webview';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -9,6 +9,7 @@ import type { WebViewMessageEvent } from 'react-native-webview';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 import { navigateFromWebView } from '@/utils';
+// import * as Haptics from 'expo-haptics';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -89,6 +90,47 @@ export default function HomeScreen() {
           />
         </BottomSheetView>
       </BottomSheet>
+      {/* <View style={styles.buttonContainer}>
+        <Button title="Selection" onPress={() => Haptics.selectionAsync()} />
+      </View>
+      <Text>Haptics.notificationAsync</Text>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Success"
+          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)}
+        />
+        <Button
+          title="Error"
+          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)}
+        />
+        <Button
+          title="Warning"
+          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)}
+        />
+      </View>
+      <Text>Haptics.impactAsync</Text>
+      <View style={styles.buttonContainer}>
+        <Button
+          title="Light"
+          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
+        />
+        <Button
+          title="Medium"
+          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
+        />
+        <Button
+          title="Heavy"
+          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)}
+        />
+        <Button
+          title="Rigid"
+          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)}
+        />
+        <Button
+          title="Soft"
+          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft)}
+        />
+      </View> */}
     </GestureHandlerRootView>
   );
 }
@@ -97,5 +139,17 @@ const styles = StyleSheet.create({
   contentContainer: {
     flex: 1,
     width: '100%',
+  },
+  container: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 16,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'stretch',
+    marginTop: 10,
+    marginBottom: 30,
+    justifyContent: 'space-between',
   },
 });
