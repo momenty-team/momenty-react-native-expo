@@ -1,5 +1,6 @@
-import type { BridgeRoute } from '@/types';
 import { router } from 'expo-router';
+
+import type { BridgeRoute } from '@/types';
 
 export const navigateFromWebView = (route?: BridgeRoute) => {
   try {

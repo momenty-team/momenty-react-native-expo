@@ -9,7 +9,8 @@ import type { WebViewMessageEvent } from 'react-native-webview';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 import { navigateFromWebView } from '@/utils';
-// import * as Haptics from 'expo-haptics';
+import type { BridgeData } from '@/types';
+import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -23,7 +24,11 @@ export default function HomeScreen() {
   }, [insets]);
 
   const handleMessage = (event: WebViewMessageEvent) => {
-    const { bottomSheet, route } = JSON.parse(event.nativeEvent.data);
+    const { bottomSheet, route, haptic, message } = JSON.parse(event.nativeEvent.data);
+
+    if (message) {
+      console.log(message);
+    }
 
     if (route) {
       navigateFromWebView(route);
@@ -40,14 +45,16 @@ export default function HomeScreen() {
         bottomSheetRef.current?.snapToIndex(bottomSheet.snapIndex);
       }
     }
+
+    if (haptic) {
+      switchWebViewHaptic(haptic);
+    }
   };
 
   const handleSheetChange = (index: number) => {
     if (index === -1) {
       return setIsBottomSheetOpen(false);
     }
-
-    console.log('index', index);
 
     webViewRef?.current?.postMessage(
       JSON.stringify({

@@ -1,10 +1,9 @@
 import { StyleSheet, View, Text } from 'react-native';
+import Login from '../login';
 
 function Analysis() {
   return (
-    <View style={styles.container}>
-      <Text style={styles.text}>analysis</Text>
-    </View>
+    <Login />
   );
 }
 
