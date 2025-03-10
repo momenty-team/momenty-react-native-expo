@@ -1,12 +1,56 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
-import { View, Text, StyleSheet, Pressable } from 'react-native';
+import React, { useState } from 'react';
+import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import * as AppleAuthentication from 'expo-apple-authentication';
 
 export default function Login() {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
 
-  const nextStep = () => {
-    router.push('/login/permission');
+  const handleAppleLogin = async () => {
+    try {
+      setLoading(true);
+
+      // ✅ Apple 로그인 실행
+      const credential = await AppleAuthentication.signInAsync({
+        requestedScopes: [
+          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+          AppleAuthentication.AppleAuthenticationScope.EMAIL,
+        ],
+      });
+
+      if (credential) {
+        console.log(credential);
+        // ✅ Apple에서 받은 ID 토큰을 백엔드로 전송
+        const response = await fetch(
+          `https://api.momenty.co.kr/auth/apple/callback?code=${credential.authorizationCode}&id_token=${credential.identityToken}&state=${credential.state}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          }
+        );
+        const result = await response.json();
+        setLoading(false);
+
+        if (response.ok) {
+          console.log(result, '결과');
+          router.push('/login/permission');
+        } else {
+          console.log(result);
+          alert(`로그인 실패: ${result}`);
+        }
+      }
+    } catch (e) {
+      setLoading(false);
+
+      const error = e as { code?: string };
+
+      if (error.code === 'ERR_REQUEST_CANCELED') {
+        alert('로그인 취소됨');
+      } else {
+        alert('로그인 중 오류 발생');
+      }
+    }
   };
 
   return (
@@ -19,10 +63,19 @@ export default function Login() {
         <Text style={styles.subTitle}>나만의 라이프 스타일로 기록하고,</Text>
         <Text style={styles.subTitle}>모먼티가 분석한 정보를 간편하게 확인하세요.</Text>
       </View>
+
       <View style={styles.buttonWrapper}>
-        <Pressable style={styles.button} onPress={nextStep}>
-          <Text style={styles.buttonText}>Apple로 로그인</Text>
-        </Pressable>
+        {loading ? (
+          <ActivityIndicator size="large" color="#021730" />
+        ) : (
+          <AppleAuthentication.AppleAuthenticationButton
+            buttonType={AppleAuthentication.AppleAuthenticationButtonType.SIGN_IN}
+            buttonStyle={AppleAuthentication.AppleAuthenticationButtonStyle.BLACK}
+            cornerRadius={12}
+            style={styles.appleButton}
+            onPress={handleAppleLogin}
+          />
+        )}
         <Text style={styles.label}>로그인 시, 해당 약관에 동의한 것으로 간주합니다.</Text>
       </View>
     </View>
@@ -63,19 +116,10 @@ const styles = StyleSheet.create({
     gap: 8,
     marginBottom: 12,
   },
-  button: {
-    backgroundColor: '#021730',
-    paddingVertical: 12,
-    paddingHorizontal: 32,
+  appleButton: {
+    width: '100%',
+    height: 50,
     borderRadius: 12,
-    alignItems: 'center',
-  },
-  buttonText: {
-    fontFamily: 'SUIT Variable',
-    fontSize: 18,
-    fontWeight: 700,
-    lineHeight: 28,
-    color: '#F4F6F9',
   },
   label: {
     display: 'flex',
