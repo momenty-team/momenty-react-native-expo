@@ -13,7 +13,7 @@ export default function Search() {
         text1: '기간이 만료되었어요.',
         icon: <CheckIcon color="#4CAF50" />,
       },
-      position: 'bottom',
+      position: 'top',
     });
   };
 
@@ -25,7 +25,7 @@ export default function Search() {
         icon: <WarnIcon color="#FF4E4E" />,
         type: 'error',
       },
-      position: 'bottom',
+      position: 'top',
     });
   };
 
