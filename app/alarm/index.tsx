@@ -7,8 +7,6 @@ import { injectionTemplate } from '@/constants/injectionTemplate';
 import type { WebViewMessageEvent } from 'react-native-webview';
 import { navigateFromWebView } from '@/utils';
 
-
-
 function Alarm() {
   const insets = useSafeAreaInsets();
 
