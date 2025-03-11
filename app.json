@@ -16,11 +16,16 @@
     },
     "ios": {
       "supportsTablet": true,
+      "usesAppleSignIn": true,
       "jsEngine": "jsc",
       "splash": {
         "image": "./assets/images/splash.png",
         "resizeMode": "contain",
         "backgroundColor": "#ffffff"
+      },
+      "bundleIdentifier": "com.d0dam.momentyreactnativeexpo",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
@@ -39,16 +44,26 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash-icon.png",
-          "imageWidth": 200,
+          "image": "./assets/images/splash.png",
+          // "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
       ],
-      "expo-font"
+      "expo-font",
+      "expo-apple-authentication"
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      }
+      // "eas": {
+      //   "projectId": "b0b01c90-a200-4997-81c2-809cd71e4956"
+      // }
+    },
+    "owner": "d0dam"
   }
 }

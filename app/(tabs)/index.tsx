@@ -26,6 +26,7 @@ export default function HomeScreen() {
   const handleMessage = (event: WebViewMessageEvent) => {
     const { bottomSheet, route, haptic, message } = JSON.parse(event.nativeEvent.data);
 
+    console.log(event.nativeEvent.data);
     if (message) {
       console.log(message);
     }
@@ -52,13 +53,14 @@ export default function HomeScreen() {
   };
 
   const handleSheetChange = (index: number) => {
+    console.log('handleSheetChange', index);
     if (index === -1) {
       return setIsBottomSheetOpen(false);
     }
 
     webViewRef?.current?.postMessage(
       JSON.stringify({
-        bottomSheet: { name: 'log-detail', state: 'hold', snapIndex: index === 2 ? 1 : index },
+        bottomSheet: { name: 'log-detail', state: 'hold', snapIndex: index },
       })
     );
 
