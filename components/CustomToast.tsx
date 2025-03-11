@@ -2,12 +2,12 @@ import React from 'react';
 import { BlurView } from 'expo-blur';
 import { View, Text, StyleSheet } from 'react-native';
 
-type CustomToastProps = {
+interface CustomToastProps {
   text1?: string;
   text2?: string;
   icon?: React.ReactNode;
   type?: 'success' | 'error';
-};
+}
 
 const CustomToast = ({ text1, text2, icon, type = 'success' }: CustomToastProps) => {
   return (
