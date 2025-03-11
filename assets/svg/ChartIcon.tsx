@@ -1,6 +1,6 @@
 import Svg, { Path } from 'react-native-svg';
 
-export default function ChartIcon({ color }: { color: string }) {
+function ChartIcon({ color }: { color: string }) {
   return (
     <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <Path
@@ -15,3 +15,5 @@ export default function ChartIcon({ color }: { color: string }) {
     </Svg>
   );
 }
+
+export default ChartIcon;

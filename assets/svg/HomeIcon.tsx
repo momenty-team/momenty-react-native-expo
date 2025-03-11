@@ -1,6 +1,6 @@
 import Svg, { Path } from 'react-native-svg';
 
-export default function HomeIcon({ color }: { color: string }) {
+function HomeIcon({ color }: { color: string }) {
   return (
     <Svg width="27" height="26" viewBox="0 0 27 26" fill="none">
       <Path
@@ -14,3 +14,5 @@ export default function HomeIcon({ color }: { color: string }) {
     </Svg>
   );
 }
+
+export default HomeIcon;
