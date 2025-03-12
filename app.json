@@ -45,7 +45,6 @@
         "expo-splash-screen",
         {
           "image": "./assets/images/splash.png",
-          // "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
         }
@@ -59,10 +58,10 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "b0b01c90-a200-4997-81c2-809cd71e4956"
       }
-      // "eas": {
-      //   "projectId": "b0b01c90-a200-4997-81c2-809cd71e4956"
-      // }
     },
     "owner": "d0dam"
   }
