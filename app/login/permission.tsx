@@ -2,11 +2,106 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 
+import BrokenHealthKit, { HealthKitPermissions } from 'react-native-health';
+
+const NativeModules = require('react-native').NativeModules;
+const AppleHealthKit = NativeModules.AppleHealthKit as typeof BrokenHealthKit;
+AppleHealthKit.Constants = BrokenHealthKit.Constants;
+
+const permissions: HealthKitPermissions = {
+  permissions: {
+    read: [
+      AppleHealthKit.Constants.Permissions.HeartRate,
+      AppleHealthKit.Constants.Permissions.ActiveEnergyBurned,
+      AppleHealthKit.Constants.Permissions.BiologicalSex,
+      AppleHealthKit.Constants.Permissions.BloodGlucose,
+      AppleHealthKit.Constants.Permissions.StepCount,
+      AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
+    ],
+    write: [],
+  },
+};
+
 export default function Permission() {
   const router = useRouter();
 
   const nextStep = () => {
-    router.push('/login/nickname');
+    // router.push('/login/nickname');
+
+    AppleHealthKit.initHealthKit(permissions, (error) => {
+      if (error) {
+        console.log('[ERROR] Cannot grant permissions!', error);
+        return;
+      }
+    });
+  };
+
+  const get = () => {
+    // AppleHealthKit.getHeartRateSamples(
+    //   {
+    //     startDate: new Date(2025, 2, 1).toISOString(),
+    //   },
+    //   (error, results) => {
+    //     if (error) {
+    //       console.log('[ERROR] Cannot get sleep samples!', error);
+    //       return;
+    //     }
+
+    //     console.log('[SUCCESS] Sleep samples fetched!', results);
+    //   }
+    // );
+
+    // AppleHealthKit.getDailyDistanceWalkingRunningSamples(
+    //   {
+    //     startDate: new Date(2024, 2, 1).toISOString(),
+    //     period: 2,
+    //   },
+    //   (error, results) => {
+    //     if (error) {
+    //       console.log('[ERROR] Cannot get sleep samples!', error);
+    //       return;
+    //     }
+
+    //     console.log('[SUCCESS] Sleep samples fetched!', results);
+    //   }
+    // );
+
+    AppleHealthKit.getActiveEnergyBurned(
+      {
+        startDate: new Date(2025, 2, 1).toISOString(),
+      },
+      (error, results) => {
+        if (error) {
+          console.log('[ERROR] Cannot get sleep samples!', error);
+          return;
+        }
+
+        console.log('[SUCCESS] Sleep samples fetched!', results);
+      }
+    );
+
+    // AppleHealthKit.getBiologicalSex({}, (error, results) => {
+    //   if (error) {
+    //     console.log('[ERROR] Cannot get sleep samples!', error);
+    //     return;
+    //   }
+
+    //   console.log('[SUCCESS] Sleep samples fetched!', results);
+    // });
+
+    // AppleHealthKit.getBloodGlucoseSamples(
+    //   {
+    //     startDate: new Date(2025, 2, 1).toISOString(),
+    //   },
+    //   (error, results) => {
+    //     if (error) {
+    //       console.log('[ERROR] Cannot get sleep samples!', error);
+    //       return;
+    //     }
+
+    //     console.log('[SUCCESS] Sleep samples fetched!', results);
+    //   }
+    // );
   };
 
   return (
@@ -24,6 +119,9 @@ export default function Permission() {
         <Text style={styles.label}>모먼티가 정확하게 분석 할 수 있도록 모두 허용해주세요.</Text>
         <Pressable style={styles.button} onPress={nextStep}>
           <Text style={styles.buttonText}>계속하기</Text>
+        </Pressable>
+        <Pressable style={styles.button} onPress={get}>
+          <Text style={styles.buttonText}>정보 출력</Text>
         </Pressable>
       </View>
     </View>

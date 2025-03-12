@@ -20,8 +20,6 @@ export default function Login() {
       });
 
       if (credential) {
-        console.log(credential);
-        // ✅ Apple에서 받은 ID 토큰을 백엔드로 전송
         const response = await fetch(
           `https://api.momenty.co.kr/auth/apple/callback?code=${credential.authorizationCode}&id_token=${credential.identityToken}&state=${credential.state}`,
           {
@@ -33,7 +31,6 @@ export default function Login() {
         setLoading(false);
 
         if (response.ok) {
-          console.log(result, '결과');
           router.push('/login/permission');
         } else {
           console.log(result);
@@ -46,9 +43,9 @@ export default function Login() {
       const error = e as { code?: string };
 
       if (error.code === 'ERR_REQUEST_CANCELED') {
-        alert('로그인 취소됨');
+        alert('로그인이 취소되었습니다. 다시 시도해주세요.');
       } else {
-        alert('로그인 중 오류 발생');
+        alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
       }
     }
   };
