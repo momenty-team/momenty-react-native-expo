@@ -1,5 +1,5 @@
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
   Text,
@@ -11,17 +11,33 @@ import {
   Platform,
 } from 'react-native';
 
-export default function Birth() {
+import { ParamList } from '@/types';
+
+type BirthProps = NativeStackScreenProps<ParamList, 'birth'>;
+
+export default function Birth({ navigation, route }: BirthProps) {
   const [birthDay, setBirthDay] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(true);
-  const router = useRouter();
+  const inputRef = useRef<TextInput>(null); // ref 생성
+
+  const { nickname } = route.params;
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus(); // 1초 후 focus() 호출
+      }
+    }, 560);
+
+    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 해제
+  }, []);
 
   const inputHandler = () => {
     if (!birthDay) {
       Alert.alert('생년월일을 입력해주세요.');
       return;
     }
-    router.push('/login/gender');
+    navigation.navigate('gender', { nickname, birth: birthDay });
   };
 
   return (
@@ -34,6 +50,7 @@ export default function Birth() {
         <Text style={styles.inputLabel}>생년월일</Text>
         <View style={styles.inputWrapper}>
           <TextInput
+            ref={inputRef} // ref 연결
             style={styles.input}
             placeholder="8자리로 입력해주세요."
             value={birthDay}
@@ -41,7 +58,6 @@ export default function Birth() {
             onFocus={() => setIsInputFocused(true)}
             onBlur={() => setIsInputFocused(false)}
             keyboardType="number-pad"
-            autoFocus
           />
         </View>
       </View>

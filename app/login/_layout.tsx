@@ -1,15 +1,28 @@
-import { Stack } from 'expo-router';
+import { createStackNavigator } from '@react-navigation/stack';
 
-export default function SignupLayout() {
+import Login from './index';
+import Permission from './permission';
+import Nickname from './nickname';
+import Birth from './birth';
+import Gender from './gender';
+import Explain from './explain';
+import Alarm from './alarm';
+import { ParamList } from '@/types';
+
+const Stack = createStackNavigator<ParamList>();
+
+function SignupLayout() {
   return (
-    <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="permission" options={{ headerShown: false }} />
-      <Stack.Screen name="nickname" options={{ headerShown: false }} />
-      <Stack.Screen name="birth" options={{ headerShown: false }} />
-      <Stack.Screen name="gender" options={{ headerShown: false }} />
-      <Stack.Screen name="explain" options={{ headerShown: false }} />
-      <Stack.Screen name="alarm" options={{ headerShown: false }} />
-    </Stack>
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="index" component={Login} />
+      <Stack.Screen name="permission" component={Permission} />
+      <Stack.Screen name="nickname" component={Nickname} />
+      <Stack.Screen name="birth" component={Birth} />
+      <Stack.Screen name="gender" component={Gender} />
+      <Stack.Screen name="explain" component={Explain} />
+      <Stack.Screen name="alarm" component={Alarm} />
+    </Stack.Navigator>
   );
 }
+
+export default SignupLayout;

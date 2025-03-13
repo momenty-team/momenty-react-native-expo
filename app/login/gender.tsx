@@ -1,14 +1,21 @@
 import { useRouter } from 'expo-router';
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import type { GestureResponderEvent } from 'react-native';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
+import { ParamList } from '@/types';
 
-export default function Gender() {
+type GenderProps = NativeStackScreenProps<ParamList, 'gender'>;
+
+export default function Gender({ navigation, route }: GenderProps) {
   const router = useRouter();
+  const [gender, setGender] = useState<'남성' | '여성' | null>(null);
+  const { nickname, birth } = route.params;
 
   const nextStep = (gender: '남성' | '여성') => (_: GestureResponderEvent) => {
     router.push('/login/explain');
-    console.log(gender);
+    setGender(gender);
+    navigation.navigate('explain', { nickname, birth, gender });
   };
 
   return (

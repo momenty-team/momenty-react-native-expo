@@ -26,7 +26,7 @@ export default function Permission() {
   const router = useRouter();
 
   const nextStep = () => {
-    // router.push('/login/nickname');
+    router.push('/login/nickname');
 
     AppleHealthKit.initHealthKit(permissions, (error) => {
       if (error) {

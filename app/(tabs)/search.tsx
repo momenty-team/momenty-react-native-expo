@@ -17,7 +17,7 @@ export default function Search() {
       setPermissionStatus(status);
     });
 
-    getExpoPushToken().then((token) => {
+    getExpoPushToken().then(async (token) => {
       if (token) {
         setExpoPushToken(token);
         console.log('Expo Push Token:', token);
@@ -124,27 +124,22 @@ async function getExpoPushToken() {
 
 // ✅ 푸시 알림 테스트 발송 함수
 async function sendTestNotification(token: string | null) {
-  if (!token) {
-    Alert.alert('Expo Push Token이 없습니다.');
-    return;
+  try {
+    const response = await fetch('https://api.momenty.co.kr/notification/token', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! Status: ${response.status}`);
+    }
+  } catch (error) {
+    console.error('Error sending token:', error);
   }
-
-  await fetch('https://exp.host/--/api/v2/push/send', {
-    method: 'POST',
-    headers: {
-      Accept: 'application/json',
-      'Accept-encoding': 'gzip, deflate',
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      to: token,
-      sound: 'default',
-      title: '테스트 알림',
-      body: '이것은 테스트 푸시 알림입니다.',
-    }),
-  });
-
-  Alert.alert('푸시 알림을 보냈습니다.');
 }
 
 // ✅ 성공 토스트 메시지

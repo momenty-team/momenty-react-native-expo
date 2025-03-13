@@ -2,6 +2,8 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import * as SecureStore from 'expo-secure-store';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function Login() {
   const router = useRouter();
@@ -31,7 +33,27 @@ export default function Login() {
         setLoading(false);
 
         if (response.ok) {
-          router.push('/login/permission');
+          const setCookieHeader = response.headers.get('set-cookie');
+
+          if (setCookieHeader) {
+            console.log('setCookieHeader:', setCookieHeader);
+            const accessTokenMatch = setCookieHeader.match(/access_token=([^;]+)/);
+            const refreshTokenMatch = setCookieHeader.match(/refresh_token=([^;]+)/);
+
+            const accessToken = accessTokenMatch ? accessTokenMatch[1] : null;
+            const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
+
+            if (accessToken && refreshToken) {
+              await AsyncStorage.setItem('accessToken', accessToken);
+              await SecureStore.setItemAsync('refreshToken', refreshToken, {
+                keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
+              });
+
+              router.push('/login/permission');
+            } else {
+              alert('토큰을 정상적으로 받지 못했습니다.');
+            }
+          }
         } else {
           console.log(result);
           alert(`로그인 실패: ${result}`);

@@ -59,6 +59,12 @@
           "healthUpdatePermission": "Custom health update permission",
           "healthClinicalDescription": "Custom health share permission for clinical data"
         }
+      ],
+      [
+        "expo-secure-store",
+        {
+          "faceIDPermission": "Allow momenty to access your Face ID biometric data."
+        }
       ]
     ],
     "experiments": {

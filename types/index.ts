@@ -22,3 +22,13 @@ export interface BridgeData {
   };
   haptic?: HapticType;
 }
+
+export type ParamList = {
+  index: undefined;
+  permission: undefined;
+  nickname: undefined;
+  birth: { nickname: string };
+  gender: { nickname: string; birth: string };
+  explain: { nickname: string; birth: string; gender: '남성' | '여성' };
+  alarm: undefined;
+};
