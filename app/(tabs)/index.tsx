@@ -10,8 +10,6 @@ import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 import { navigateFromWebView } from '@/utils';
 import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import * as SecureStore from 'expo-secure-store';
 import { useAuth } from '@/utils/useAuth';
 
 export default function HomeScreen() {
