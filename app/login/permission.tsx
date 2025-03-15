@@ -26,13 +26,12 @@ export default function Permission() {
   const router = useRouter();
 
   const nextStep = () => {
-    router.push('/login/nickname');
-
     AppleHealthKit.initHealthKit(permissions, (error) => {
       if (error) {
         console.log('[ERROR] Cannot grant permissions!', error);
         return;
       }
+      router.push('/login/nickname');
     });
   };
 
