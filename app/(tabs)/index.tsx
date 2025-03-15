@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -9,19 +9,35 @@ import type { WebViewMessageEvent } from 'react-native-webview';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 import { navigateFromWebView } from '@/utils';
-import type { BridgeData } from '@/types';
 import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import * as SecureStore from 'expo-secure-store';
+import { useAuth } from '@/utils/useAuth';
 
 export default function HomeScreen() {
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const mainWebViewRef = useRef<WebView>(null);
+  const webViewRef = useRef<WebView>(null);
   const insets = useSafeAreaInsets();
   const [notchHeight, setNotchHeight] = useState(0);
-  const bottomSheetRef = useRef<BottomSheet>(null);
-  const webViewRef = useRef<WebView>(null);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const { accessToken, refreshToken } = useAuth();
 
   useEffect(() => {
     setNotchHeight(insets.top);
   }, [insets]);
+
+  useEffect(() => {
+    if (accessToken && refreshToken && webViewRef.current) {
+      const injectScript = `
+        window.localStorage.setItem('accessToken', '${accessToken}');
+        window.localStorage.setItem('refreshToken', '${refreshToken}');
+        window.dispatchEvent(new Event('storage'));
+      `;
+
+      webViewRef.current.injectJavaScript(injectScript);
+    }
+  }, [accessToken, refreshToken]);
 
   const handleMessage = (event: WebViewMessageEvent) => {
     const { bottomSheet, route, haptic, message } = JSON.parse(event.nativeEvent.data);
@@ -70,6 +86,7 @@ export default function HomeScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <WebView
+        ref={mainWebViewRef}
         source={{ uri: `${WEBVIEW_BASE_URL}` }}
         injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
         onMessage={handleMessage}

@@ -2,8 +2,7 @@ import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import * as SecureStore from 'expo-secure-store';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { saveAccessToken, saveRefreshToken } from '@/utils/tokenStorage';
 
 export default function Login() {
   const router = useRouter();
@@ -13,7 +12,6 @@ export default function Login() {
     try {
       setLoading(true);
 
-      // ✅ Apple 로그인 실행
       const credential = await AppleAuthentication.signInAsync({
         requestedScopes: [
           AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
@@ -44,10 +42,8 @@ export default function Login() {
             const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
 
             if (accessToken && refreshToken) {
-              await AsyncStorage.setItem('accessToken', accessToken);
-              await SecureStore.setItemAsync('refreshToken', refreshToken, {
-                keychainAccessible: SecureStore.WHEN_UNLOCKED_THIS_DEVICE_ONLY,
-              });
+              saveAccessToken(accessToken);
+              saveRefreshToken(refreshToken);
 
               router.push('/login/permission');
             } else {
