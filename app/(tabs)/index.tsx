@@ -25,18 +25,6 @@ export default function HomeScreen() {
     setNotchHeight(insets.top);
   }, [insets]);
 
-  useEffect(() => {
-    if (accessToken && refreshToken && webViewRef.current) {
-      const injectScript = `
-        window.localStorage.setItem('accessToken', '${accessToken}');
-        window.localStorage.setItem('refreshToken', '${refreshToken}');
-        window.dispatchEvent(new Event('storage'));
-      `;
-
-      webViewRef.current.injectJavaScript(injectScript);
-    }
-  }, [accessToken, refreshToken]);
-
   const handleMessage = (event: WebViewMessageEvent) => {
     const { bottomSheet, route, haptic, message } = JSON.parse(event.nativeEvent.data);
 
@@ -84,9 +72,11 @@ export default function HomeScreen() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <WebView
-        ref={mainWebViewRef}
         source={{ uri: `${WEBVIEW_BASE_URL}` }}
-        injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
+        injectedJavaScript={injectionTemplate({
+          tokens: { accessToken, refreshToken },
+          options: { safeAreaTopInset: notchHeight },
+        })}
         onMessage={handleMessage}
         style={{ flex: 1, backgroundColor: '#F4F6F9' }}
       />
