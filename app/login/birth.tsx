@@ -44,7 +44,7 @@ export default function Birth({ navigation, route }: BirthProps) {
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>김혜준님의 생일을</Text>
+          <Text style={styles.title}>{nickname}님의 생일을</Text>
           <Text style={styles.title}>알려주세요.</Text>
         </View>
         <Text style={styles.inputLabel}>생년월일</Text>
