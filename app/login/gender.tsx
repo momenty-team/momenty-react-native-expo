@@ -12,10 +12,29 @@ export default function Gender({ navigation, route }: GenderProps) {
   const [gender, setGender] = useState<'남성' | '여성' | null>(null);
   const { nickname, birth } = route.params;
 
-  const nextStep = (gender: '남성' | '여성') => (_: GestureResponderEvent) => {
+  const nextStep = (gender: 'male' | 'female') => (_: GestureResponderEvent) => {
     router.push('/login/explain');
-    setGender(gender);
-    navigation.navigate('explain', { nickname, birth, gender });
+    //setGender(gender);
+    //navigation.navigate('explain', { nickname, birth, gender });
+    fetch('https://api.momenty.co.kr/users/register', {
+      method: 'POST',
+      credentials: 'include',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        nickname: nickname,
+        birth_date: '2000-06-28',
+        gender: gender,
+      }),
+    })
+      .then((response) => {
+        console.log(response);
+        router.push('/login/explain');
+      })
+      .catch((error) => {
+        console.error('Error:', error);
+      });
   };
 
   return (
@@ -30,7 +49,7 @@ export default function Gender({ navigation, route }: GenderProps) {
             styles.button,
             { backgroundColor: pressed ? '#D6DAE0' : '#E8EBEF' },
           ]}
-          onPress={nextStep('여성')}
+          onPress={nextStep('female')}
         >
           <Text style={styles.buttonText}>여성</Text>
         </Pressable>
@@ -39,7 +58,7 @@ export default function Gender({ navigation, route }: GenderProps) {
             styles.button,
             { backgroundColor: pressed ? '#D6DAE0' : '#E8EBEF' },
           ]}
-          onPress={nextStep('남성')}
+          onPress={nextStep('male')}
         >
           <Text style={styles.buttonText}>남성</Text>
         </Pressable>
