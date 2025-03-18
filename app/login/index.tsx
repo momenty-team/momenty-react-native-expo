@@ -3,6 +3,8 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { saveAccessToken, saveRefreshToken } from '@/utils/tokenStorage';
+import CookieManager from '@react-native-cookies/cookies';
+import { WEBVIEW_BASE_URL } from '@/constants/environment';
 
 export default function Login() {
   const router = useRouter();
@@ -42,8 +44,25 @@ export default function Login() {
             const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
 
             if (accessToken && refreshToken) {
-              saveAccessToken(accessToken);
-              saveRefreshToken(refreshToken);
+              await saveAccessToken(accessToken);
+              await saveRefreshToken(refreshToken);
+
+              await CookieManager.set(WEBVIEW_BASE_URL, {
+                name: 'access_token',
+                value: accessToken,
+              });
+              await CookieManager.set(WEBVIEW_BASE_URL, {
+                name: 'refresh_token',
+                value: refreshToken,
+              });
+              await CookieManager.set('https://api.momenty.co.kr', {
+                name: 'access_token',
+                value: accessToken,
+              });
+              await CookieManager.set('https://api.momenty.co.kr', {
+                name: 'refresh_token',
+                value: refreshToken,
+              });
 
               router.push('/login/permission');
             } else {

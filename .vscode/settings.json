@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["Pressable"]
+  "cSpell.words": ["Pressable"],
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": "explicit",
+    "source.fixAll.stylelint": "explicit",
+    "source.fixAll.prettier": "explicit"
+  },
+  "prettier.enable": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode"
 }

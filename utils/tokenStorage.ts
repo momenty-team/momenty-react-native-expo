@@ -22,7 +22,7 @@ export const saveRefreshToken = async (token: string) => {
   }
 };
 
-export const getAccessToken = async (): Promise<string | null> => {
+export const getAccessToken = async () => {
   try {
     return await AsyncStorage.getItem(ACCESS_TOKEN_KEY);
   } catch (error) {
@@ -31,7 +31,7 @@ export const getAccessToken = async (): Promise<string | null> => {
   }
 };
 
-export const getRefreshToken = async (): Promise<string | null> => {
+export const getRefreshToken = async () => {
   try {
     return await SecureStore.getItemAsync(REFRESH_TOKEN_KEY);
   } catch (error) {

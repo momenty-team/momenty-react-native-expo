@@ -15,7 +15,6 @@ function User() {
     setNotchHeight(insets.top);
   }, [insets]);
 
-
   const handleMessage = (event: WebViewMessageEvent) => {
     navigateFromWebView(JSON.parse(event.nativeEvent.data).route);
   };
@@ -26,6 +25,7 @@ function User() {
       injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
       onMessage={handleMessage}
       style={{ flex: 1 }}
+      sharedCookiesEnabled={true}
     />
   );
 }
