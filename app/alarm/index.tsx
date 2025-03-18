@@ -6,8 +6,7 @@ import { injectionTemplate } from '@/constants/injectionTemplate';
 
 import type { WebViewMessageEvent } from 'react-native-webview';
 import { navigateFromWebView } from '@/utils';
-import { getAccessToken, getRefreshToken } from '@/utils/tokenStorage';
-import CookieManager from '@react-native-cookies/cookies';
+import { setAuthToWebview } from '@/utils/cookie';
 
 function Alarm() {
   const insets = useSafeAreaInsets();
@@ -17,31 +16,7 @@ function Alarm() {
   };
 
   useEffect(() => {
-    const getCookie = async () => {
-      const accessToken = await getAccessToken();
-      const refreshToken = await getRefreshToken();
-
-      if (accessToken && refreshToken) {
-        await CookieManager.set(`${WEBVIEW_BASE_URL}/alarm`, {
-          name: 'access_token',
-          value: accessToken,
-        });
-        await CookieManager.set(`${WEBVIEW_BASE_URL}/alarm`, {
-          name: 'refresh_token',
-          value: refreshToken,
-        });
-        await CookieManager.set('https://api.momenty.co.kr', {
-          name: 'access_token',
-          value: accessToken,
-        });
-        await CookieManager.set('https://api.momenty.co.kr', {
-          name: 'refresh_token',
-          value: refreshToken,
-        });
-      }
-    };
-
-    getCookie();
+    setAuthToWebview();
   }, []);
 
   return (

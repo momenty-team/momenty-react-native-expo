@@ -3,9 +3,7 @@ import { useFonts } from 'expo-font';
 import React, { useEffect } from 'react';
 import Toast, { ToastConfig } from 'react-native-toast-message';
 import CustomToast from '@/components/CustomToast';
-import { getAccessToken, getRefreshToken } from '@/utils/tokenStorage';
-import { WEBVIEW_BASE_URL } from '@/constants/environment';
-import CookieManager from '@react-native-cookies/cookies';
+import { setAuthToWebview } from '@/utils/cookie';
 
 const TOKEN_REFRESH_INTERVAL = 2 * 60 * 1000;
 
@@ -20,31 +18,7 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    const getCookie = async () => {
-      const accessToken = await getAccessToken();
-      const refreshToken = await getRefreshToken();
-
-      if (accessToken && refreshToken) {
-        await CookieManager.set(`${WEBVIEW_BASE_URL}/alarm`, {
-          name: 'access_token',
-          value: accessToken,
-        });
-        await CookieManager.set(`${WEBVIEW_BASE_URL}/alarm`, {
-          name: 'refresh_token',
-          value: refreshToken,
-        });
-        await CookieManager.set('https://api.momenty.co.kr', {
-          name: 'access_token',
-          value: accessToken,
-        });
-        await CookieManager.set('https://api.momenty.co.kr', {
-          name: 'refresh_token',
-          value: refreshToken,
-        });
-      }
-    };
-
-    getCookie();
+    setAuthToWebview();
   }, []);
 
   return (
