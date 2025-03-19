@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 
 import { ParamList } from '@/types';
+import { validateBirthDate } from '@/utils/validation';
 
 type BirthProps = NativeStackScreenProps<ParamList, 'birth'>;
 
@@ -25,16 +26,21 @@ export default function Birth({ navigation, route }: BirthProps) {
   useEffect(() => {
     const timer = setTimeout(() => {
       if (inputRef.current) {
-        inputRef.current.focus(); // 1초 후 focus() 호출
+        inputRef.current.focus();
       }
     }, 560);
 
-    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 해제
+    return () => clearTimeout(timer);
   }, []);
 
   const inputHandler = () => {
     if (!birthDay) {
       Alert.alert('생년월일을 입력해주세요.');
+      return;
+    }
+
+    if (!validateBirthDate(birthDay)) {
+      Alert.alert('올바른 생년월일을 입력해주세요. (YYYYMMDD)');
       return;
     }
     navigation.navigate('gender', { nickname, birth: birthDay });
