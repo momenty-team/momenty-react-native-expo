@@ -17,24 +17,39 @@ type NickNameProps = NativeStackNavigationProp<ParamList, 'nickname'>;
 export default function Nickname({ navigation }: { navigation: NickNameProps }) {
   const [nickname, setNickname] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(true);
-  const inputRef = useRef<TextInput>(null); // ref 생성
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (inputRef.current) {
-        inputRef.current.focus(); // 1초 후 focus() 호출
+        inputRef.current.focus();
       }
     }, 480);
 
-    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 해제
+    return () => clearTimeout(timer);
   }, []);
 
-  const inputHandler = () => {
+  const nickNameCheck = () => {
     if (!nickname) {
       Alert.alert('닉네임을 입력해주세요.');
       return;
     }
-    navigation.navigate('birth', { nickname });
+    fetch(
+      `https://api.momenty.co.kr/users/nickname/check?nickname=${encodeURIComponent(nickname)}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    ).then((response) => {
+      if (!response.ok) {
+        Alert.alert('닉네임이 중복되었습니다.');
+        return;
+      } 
+        navigation.navigate('birth', { nickname });
+    });
   };
 
   return (
@@ -47,7 +62,7 @@ export default function Nickname({ navigation }: { navigation: NickNameProps }) 
         <Text style={styles.inputLabel}>닉네임</Text>
         <View style={styles.inputWrapper}>
           <TextInput
-            ref={inputRef} // ref 연결
+            ref={inputRef}
             style={styles.input}
             value={nickname}
             onChangeText={setNickname}
@@ -59,7 +74,7 @@ export default function Nickname({ navigation }: { navigation: NickNameProps }) 
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Pressable
           style={isInputFocused ? styles.buttonFocus : styles.button}
-          onPress={inputHandler}
+          onPress={nickNameCheck}
         >
           <Text style={styles.buttonText}>확인</Text>
         </Pressable>

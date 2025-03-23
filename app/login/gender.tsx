@@ -1,5 +1,5 @@
 import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import type { GestureResponderEvent } from 'react-native';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
@@ -7,15 +7,12 @@ import { ParamList } from '@/types';
 
 type GenderProps = NativeStackScreenProps<ParamList, 'gender'>;
 
-export default function Gender({ navigation, route }: GenderProps) {
+export default function Gender({ route }: GenderProps) {
   const router = useRouter();
-  const [gender, setGender] = useState<'남성' | '여성' | null>(null);
-  const { nickname, birth } = route.params;
+  const { nickname } = route.params;
 
   const nextStep = (gender: 'male' | 'female') => (_: GestureResponderEvent) => {
     router.push('/login/explain');
-    //setGender(gender);
-    //navigation.navigate('explain', { nickname, birth, gender });
     fetch('https://api.momenty.co.kr/users/register', {
       method: 'POST',
       credentials: 'include',
