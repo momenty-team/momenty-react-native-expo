@@ -43,7 +43,11 @@ export default function Birth({
       return;
     }
 
-    navigation.navigate('gender', { ...route.params, birth_date: birthDay });
+    const year = birthDay.slice(0, 4);
+    const month = birthDay.slice(4, 6);
+    const day = birthDay.slice(6, 8);
+
+    navigation.navigate('gender', { ...route.params, birth_date: `${year}-${month}-${day}` });
   };
 
   return (
