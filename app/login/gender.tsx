@@ -1,40 +1,42 @@
-import { useRouter } from 'expo-router';
-import React, { useState } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { GestureResponderEvent } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ParamList } from '@/types';
+import type { LoginParamList } from '@/types';
 
-type GenderProps = NativeStackScreenProps<ParamList, 'gender'>;
+export default function Gender({
+  navigation,
+  route,
+}: NativeStackScreenProps<LoginParamList, 'gender'>) {
+  const { nickname, birth_date, first_name, last_name } = route.params;
 
-export default function Gender({ navigation, route }: GenderProps) {
-  const router = useRouter();
-  const [gender, setGender] = useState<'남성' | '여성' | null>(null);
-  const { nickname, birth } = route.params;
-
-  const nextStep = (gender: 'male' | 'female') => (_: GestureResponderEvent) => {
-    router.push('/login/explain');
-    //setGender(gender);
-    //navigation.navigate('explain', { nickname, birth, gender });
-    fetch('https://api.momenty.co.kr/users/register', {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        nickname: nickname,
-        birth_date: '2000-06-28',
-        gender: gender,
-      }),
-    })
-      .then((response) => {
-        console.log(response);
-        router.push('/login/explain');
-      })
-      .catch((error) => {
-        console.error('Error:', error);
+  const nextStep = async (gender: 'male' | 'female') => {
+    console.log('asd');
+    try {
+      console.log('1111');
+      const response = await fetch('https://api.momenty.co.kr/users/register', {
+        method: 'POST',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          nickname,
+          birth_date: '1996-01-01',
+          first_name,
+          last_name,
+          gender,
+        }),
       });
+
+      if (response.ok) {
+        console.log('2222');
+        navigation.navigate('explain');
+      }
+      console.log('3333');
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -49,7 +51,7 @@ export default function Gender({ navigation, route }: GenderProps) {
             styles.button,
             { backgroundColor: pressed ? '#D6DAE0' : '#E8EBEF' },
           ]}
-          onPress={nextStep('female')}
+          onPress={() => nextStep('female')}
         >
           <Text style={styles.buttonText}>여성</Text>
         </Pressable>
@@ -58,7 +60,7 @@ export default function Gender({ navigation, route }: GenderProps) {
             styles.button,
             { backgroundColor: pressed ? '#D6DAE0' : '#E8EBEF' },
           ]}
-          onPress={nextStep('male')}
+          onPress={() => nextStep('male')}
         >
           <Text style={styles.buttonText}>남성</Text>
         </Pressable>

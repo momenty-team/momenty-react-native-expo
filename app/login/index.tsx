@@ -1,13 +1,14 @@
-import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { saveAccessToken, saveRefreshToken } from '@/utils/tokenStorage';
 import CookieManager from '@react-native-cookies/cookies';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 
-export default function Login() {
-  const router = useRouter();
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { LoginParamList } from '@/types';
+
+export default function Login({ navigation }: NativeStackScreenProps<LoginParamList, 'index'>) {
   const [loading, setLoading] = useState(false);
 
   const handleAppleLogin = async () => {
@@ -29,6 +30,7 @@ export default function Login() {
             headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           }
         );
+
         const result = await response.json();
         setLoading(false);
 
@@ -36,7 +38,6 @@ export default function Login() {
           const setCookieHeader = response.headers.get('set-cookie');
 
           if (setCookieHeader) {
-            console.log('setCookieHeader:', setCookieHeader);
             const accessTokenMatch = setCookieHeader.match(/access_token=([^;]+)/);
             const refreshTokenMatch = setCookieHeader.match(/refresh_token=([^;]+)/);
 
@@ -64,17 +65,24 @@ export default function Login() {
                 value: refreshToken,
               });
 
-              router.push('/login/permission');
+              if (credential?.fullName) {
+                navigation.navigate('permission', {
+                  first_name: credential.fullName?.givenName || '',
+                  last_name: credential.fullName?.familyName || '',
+                });
+              } else {
+                navigation.navigate('permission', { first_name: '', last_name: '' });
+              }
             } else {
               alert('토큰을 정상적으로 받지 못했습니다.');
             }
           }
         } else {
-          console.log(result);
           alert(`로그인 실패: ${result}`);
         }
       }
     } catch (e) {
+      console.log(e);
       setLoading(false);
 
       const error = e as { code?: string };

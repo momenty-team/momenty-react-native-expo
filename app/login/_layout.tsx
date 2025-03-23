@@ -7,9 +7,10 @@ import Birth from './birth';
 import Gender from './gender';
 import Explain from './explain';
 import Alarm from './alarm';
-import { ParamList } from '@/types';
 
-const Stack = createStackNavigator<ParamList>();
+import type { LoginParamList } from '@/types';
+
+const Stack = createStackNavigator<LoginParamList>();
 
 function SignupLayout() {
   return (

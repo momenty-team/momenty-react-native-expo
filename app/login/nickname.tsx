@@ -1,4 +1,3 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -10,23 +9,26 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ParamList } from '@/types';
 
-type NickNameProps = NativeStackNavigationProp<ParamList, 'nickname'>;
+import type { LoginParamList } from '@/types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function Nickname({ navigation }: { navigation: NickNameProps }) {
+export default function Nickname({
+  navigation,
+  route,
+}: NativeStackScreenProps<LoginParamList, 'nickname'>) {
   const [nickname, setNickname] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(true);
-  const inputRef = useRef<TextInput>(null); // ref 생성
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (inputRef.current) {
-        inputRef.current.focus(); // 1초 후 focus() 호출
+        inputRef.current.focus();
       }
     }, 480);
 
-    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 해제
+    return () => clearTimeout(timer);
   }, []);
 
   const inputHandler = () => {
@@ -34,7 +36,8 @@ export default function Nickname({ navigation }: { navigation: NickNameProps }) 
       Alert.alert('닉네임을 입력해주세요.');
       return;
     }
-    navigation.navigate('birth', { nickname });
+
+    navigation.navigate('birth', { ...route.params, nickname });
   };
 
   return (

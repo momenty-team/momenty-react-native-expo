@@ -1,15 +1,9 @@
 import { useRouter } from 'expo-router';
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
-import { ParamList } from '@/types';
 
-type ExplainProps = NativeStackScreenProps<ParamList, 'explain'>;
-
-export default function Explain({ route }: ExplainProps) {
+export default function Explain() {
   const router = useRouter();
-
-  const { nickname, birth, gender } = route.params;
 
   const nextStep = () => {
     router.push('/login/alarm');
@@ -21,9 +15,6 @@ export default function Explain({ route }: ExplainProps) {
         <View style={styles.titleWrapper}>
           <Text style={styles.title}>앱설명설명</Text>
           <Text style={styles.title}>설명설명설명설명</Text>
-          <Text style={styles.title}>{nickname}</Text>
-          <Text style={styles.title}>{birth}</Text>
-          <Text style={styles.title}>{gender}</Text>
         </View>
         <Text style={styles.subTitle}>어쩌구저쩌구어쩌구저쩌구</Text>
         <Text style={styles.subTitle}>궁시렁궁시렁</Text>
