@@ -31,13 +31,27 @@ export default function Nickname({
     return () => clearTimeout(timer);
   }, []);
 
-  const inputHandler = () => {
+  const nickNameCheck = () => {
     if (!nickname) {
       Alert.alert('닉네임을 입력해주세요.');
       return;
     }
-
-    navigation.navigate('birth', { ...route.params, nickname });
+    fetch(
+      `https://api.momenty.co.kr/users/nickname/check?nickname=${encodeURIComponent(nickname)}`,
+      {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    ).then((response) => {
+      if (!response.ok) {
+        Alert.alert('닉네임이 중복되었습니다.');
+        return;
+      }
+      navigation.navigate('birth', { ...route.params, nickname });
+    });
   };
 
   return (
@@ -50,7 +64,7 @@ export default function Nickname({
         <Text style={styles.inputLabel}>닉네임</Text>
         <View style={styles.inputWrapper}>
           <TextInput
-            ref={inputRef} // ref 연결
+            ref={inputRef}
             style={styles.input}
             value={nickname}
             onChangeText={setNickname}
@@ -62,7 +76,7 @@ export default function Nickname({
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Pressable
           style={isInputFocused ? styles.buttonFocus : styles.button}
-          onPress={inputHandler}
+          onPress={nickNameCheck}
         >
           <Text style={styles.buttonText}>확인</Text>
         </Pressable>
