@@ -23,7 +23,7 @@ export default function Gender({
         },
         body: JSON.stringify({
           nickname,
-          birth_date: '1996-01-01',
+          birth_date,
           first_name,
           last_name,
           gender,
