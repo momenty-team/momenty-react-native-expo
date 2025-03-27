@@ -25,7 +25,6 @@ export default function HomeScreen() {
   const handleMessage = (event: WebViewMessageEvent) => {
     const { bottomSheet, route, haptic, message } = JSON.parse(event.nativeEvent.data);
 
-    console.log(event.nativeEvent.data);
     if (message) {
       console.log(message);
     }

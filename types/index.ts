@@ -21,6 +21,10 @@ export interface BridgeData {
     snapIndex?: number;
   };
   haptic?: HapticType;
+  history?: {
+    route?: string;
+    funnel?: string;
+  }
 }
 
 export type LoginParamList = {

@@ -5,6 +5,9 @@ import { injectionTemplate } from '@/constants/injectionTemplate';
 
 import type { WebViewMessageEvent } from 'react-native-webview';
 import { navigateFromWebView } from '@/utils';
+import { router } from 'expo-router';
+import TopNavigation from '@/components/TopNavigation';
+import { View } from 'react-native';
 
 function Notice() {
   const insets = useSafeAreaInsets();
@@ -13,13 +16,20 @@ function Notice() {
     navigateFromWebView(JSON.parse(event.nativeEvent.data).route);
   };
 
+  const onClickBack = () => {
+    router.back();
+  };
+
   return (
-    <WebView
-      source={{ uri: `${WEBVIEW_BASE_URL}/user/notice` }}
-      injectedJavaScript={injectionTemplate()}
-      onMessage={handleMessage}
-      style={{ flex: 1, paddingTop: insets.top }}
-    />
+    <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#ffffff' }}>
+      <TopNavigation onClickBack={onClickBack} />
+      <WebView
+        source={{ uri: `${WEBVIEW_BASE_URL}/user/notice` }}
+        injectedJavaScript={injectionTemplate()}
+        onMessage={handleMessage}
+        style={{ flex: 1 }}
+      />
+    </View>
   );
 }
 
