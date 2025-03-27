@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, StyleSheet, Text, View } from 'react-native';
+import { StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
@@ -9,14 +9,13 @@ import type { WebViewMessageEvent } from 'react-native-webview';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 import { navigateFromWebView } from '@/utils';
-import type { BridgeData } from '@/types';
 import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
 
 export default function HomeScreen() {
-  const insets = useSafeAreaInsets();
-  const [notchHeight, setNotchHeight] = useState(0);
   const bottomSheetRef = useRef<BottomSheet>(null);
   const webViewRef = useRef<WebView>(null);
+  const insets = useSafeAreaInsets();
+  const [notchHeight, setNotchHeight] = useState(0);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
 
   useEffect(() => {
@@ -26,7 +25,6 @@ export default function HomeScreen() {
   const handleMessage = (event: WebViewMessageEvent) => {
     const { bottomSheet, route, haptic, message } = JSON.parse(event.nativeEvent.data);
 
-    console.log(event.nativeEvent.data);
     if (message) {
       console.log(message);
     }
@@ -74,6 +72,7 @@ export default function HomeScreen() {
         injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
         onMessage={handleMessage}
         style={{ flex: 1, backgroundColor: '#F4F6F9' }}
+        sharedCookiesEnabled={true}
       />
 
       <BottomSheet
@@ -99,47 +98,6 @@ export default function HomeScreen() {
           />
         </BottomSheetView>
       </BottomSheet>
-      {/* <View style={styles.buttonContainer}>
-        <Button title="Selection" onPress={() => Haptics.selectionAsync()} />
-      </View>
-      <Text>Haptics.notificationAsync</Text>
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Success"
-          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success)}
-        />
-        <Button
-          title="Error"
-          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Error)}
-        />
-        <Button
-          title="Warning"
-          onPress={() => Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning)}
-        />
-      </View>
-      <Text>Haptics.impactAsync</Text>
-      <View style={styles.buttonContainer}>
-        <Button
-          title="Light"
-          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light)}
-        />
-        <Button
-          title="Medium"
-          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium)}
-        />
-        <Button
-          title="Heavy"
-          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy)}
-        />
-        <Button
-          title="Rigid"
-          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Rigid)}
-        />
-        <Button
-          title="Soft"
-          onPress={() => Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Soft)}
-        />
-      </View> */}
     </GestureHandlerRootView>
   );
 }

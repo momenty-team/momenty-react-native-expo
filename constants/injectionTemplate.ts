@@ -1,6 +1,10 @@
 interface InjectionTemplate {
   css?: string[] | string;
   js?: string[] | string;
+  tokens?: {
+    accessToken?: string | null;
+    refreshToken?: string | null;
+  };
   options?: {
     safeAreaTopInset?: number;
     disableSelection?: boolean;
@@ -9,8 +13,21 @@ interface InjectionTemplate {
 }
 
 export const injectionTemplate = (config?: InjectionTemplate) => {
-  const { css, js, options = {} } = config || {};
+  const { css, js, tokens = {}, options = {} } = config || {};
+  const { accessToken, refreshToken } = tokens;
   const { safeAreaTopInset, disableSelection = true, disableZoom = true } = options;
+
+  const transportToken = () => { 
+    if (accessToken && refreshToken) {
+      return `
+        window.localStorage.setItem('accessToken', '${accessToken}');
+        window.localStorage.setItem('refreshToken', '${refreshToken}');
+        window.dispatchEvent(new Event('storage'));
+      `
+    }
+
+    return '';
+  };
 
   const safeAreaTopInsetTemplate = (height?: number) => {
     if (height) {
@@ -57,6 +74,7 @@ export const injectionTemplate = (config?: InjectionTemplate) => {
     `
     }
 
+    ${transportToken()}
     ${js && (Array.isArray(js) ? js.join('') : js)}
   `;
 

@@ -1,10 +1,13 @@
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
-import WebView from 'react-native-webview';
 import { injectionTemplate } from '@/constants/injectionTemplate';
+import TopNavigation from '@/components/TopNavigation';
+import WebView from 'react-native-webview';
+import { View } from 'react-native';
+import { router } from 'expo-router';
+import { navigateFromWebView } from '@/utils';
 
 import type { WebViewMessageEvent } from 'react-native-webview';
-import { navigateFromWebView } from '@/utils';
 
 function OpenSource() {
   const insets = useSafeAreaInsets();
@@ -13,13 +16,20 @@ function OpenSource() {
     navigateFromWebView(JSON.parse(event.nativeEvent.data).route);
   };
 
+  const onClickBack = () => {
+    router.back();
+  };
+
   return (
-    <WebView
-      source={{ uri: `${WEBVIEW_BASE_URL}/user/open-source` }}
-      injectedJavaScript={injectionTemplate()}
-      onMessage={handleMessage}
-      style={{ flex: 1, paddingTop: insets.top }}
-    />
+    <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#ffffff' }}>
+      <TopNavigation onClickBack={onClickBack} />
+      <WebView
+        source={{ uri: `${WEBVIEW_BASE_URL}/user/open-source` }}
+        injectedJavaScript={injectionTemplate()}
+        onMessage={handleMessage}
+        style={{ flex: 1 }}
+      />
+    </View>
   );
 }
 

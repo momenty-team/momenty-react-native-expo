@@ -1,4 +1,3 @@
-import { NativeStackScreenProps } from '@react-navigation/native-stack';
 import React, { useEffect, useRef, useState } from 'react';
 import {
   View,
@@ -10,26 +9,27 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
+import { validateBirthDate } from '@/utils/validation';
 
-import { ParamList } from '@/types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { LoginParamList } from '@/types';
 
-type BirthProps = NativeStackScreenProps<ParamList, 'birth'>;
-
-export default function Birth({ navigation, route }: BirthProps) {
+export default function Birth({
+  navigation,
+  route,
+}: NativeStackScreenProps<LoginParamList, 'birth'>) {
   const [birthDay, setBirthDay] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(true);
-  const inputRef = useRef<TextInput>(null); // ref 생성
-
-  const { nickname } = route.params;
+  const inputRef = useRef<TextInput>(null);
 
   useEffect(() => {
     const timer = setTimeout(() => {
       if (inputRef.current) {
-        inputRef.current.focus(); // 1초 후 focus() 호출
+        inputRef.current.focus();
       }
     }, 560);
 
-    return () => clearTimeout(timer); // 컴포넌트 언마운트 시 타이머 해제
+    return () => clearTimeout(timer);
   }, []);
 
   const inputHandler = () => {
@@ -37,20 +37,30 @@ export default function Birth({ navigation, route }: BirthProps) {
       Alert.alert('생년월일을 입력해주세요.');
       return;
     }
-    navigation.navigate('gender', { nickname, birth: birthDay });
+
+    if (!validateBirthDate(birthDay)) {
+      Alert.alert('올바른 생년월일을 입력해주세요. (YYYYMMDD)');
+      return;
+    }
+
+    const year = birthDay.slice(0, 4);
+    const month = birthDay.slice(4, 6);
+    const day = birthDay.slice(6, 8);
+
+    navigation.navigate('gender', { ...route.params, birth_date: `${year}-${month}-${day}` });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{nickname}님의 생일을</Text>
+          <Text style={styles.title}>{route.params.nickname}님의 생일을</Text>
           <Text style={styles.title}>알려주세요.</Text>
         </View>
-        <Text style={styles.inputLabel}>생년월일</Text>
+        <Text style={styles.inputLabel}>생년월일 - YYYYMMDD</Text>
         <View style={styles.inputWrapper}>
           <TextInput
-            ref={inputRef} // ref 연결
+            ref={inputRef}
             style={styles.input}
             placeholder="8자리로 입력해주세요."
             value={birthDay}

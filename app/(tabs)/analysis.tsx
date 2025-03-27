@@ -1,9 +1,14 @@
-import { StyleSheet, View, Text } from 'react-native';
-import Login from '../login';
+import { StyleSheet, View, Text, Pressable } from 'react-native';
+import { router } from 'expo-router';
 
 function Analysis() {
   return (
-    <Login />
+    <View style={styles.container}>
+      <Text style={styles.text}>Analysis</Text>
+      <Pressable onPress={() => router.push('/login')}>
+        <Text>Go to Login</Text>
+      </Pressable>
+    </View>
   );
 }
 

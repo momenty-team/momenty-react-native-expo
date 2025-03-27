@@ -1,8 +1,9 @@
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
-
 import BrokenHealthKit, { HealthKitPermissions } from 'react-native-health';
+
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { LoginParamList } from '@/types';
 
 const NativeModules = require('react-native').NativeModules;
 const AppleHealthKit = NativeModules.AppleHealthKit as typeof BrokenHealthKit;
@@ -22,16 +23,18 @@ const permissions: HealthKitPermissions = {
   },
 };
 
-export default function Permission() {
-  const router = useRouter();
-
+export default function Permission({
+  navigation,
+  route,
+}: NativeStackScreenProps<LoginParamList, 'permission'>) {
   const nextStep = () => {
     AppleHealthKit.initHealthKit(permissions, (error) => {
       if (error) {
         console.log('[ERROR] Cannot grant permissions!', error);
         return;
       }
-      router.push('/login/nickname');
+
+      navigation.navigate('nickname', route.params);
     });
   };
 

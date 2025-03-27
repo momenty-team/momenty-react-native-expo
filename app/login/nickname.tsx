@@ -1,4 +1,3 @@
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
@@ -10,11 +9,14 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { ParamList } from '@/types';
 
-type NickNameProps = NativeStackNavigationProp<ParamList, 'nickname'>;
+import type { LoginParamList } from '@/types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function Nickname({ navigation }: { navigation: NickNameProps }) {
+export default function Nickname({
+  navigation,
+  route,
+}: NativeStackScreenProps<LoginParamList, 'nickname'>) {
   const [nickname, setNickname] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(true);
   const inputRef = useRef<TextInput>(null);
@@ -47,8 +49,8 @@ export default function Nickname({ navigation }: { navigation: NickNameProps }) 
       if (!response.ok) {
         Alert.alert('닉네임이 중복되었습니다.');
         return;
-      } 
-        navigation.navigate('birth', { nickname });
+      }
+      navigation.navigate('birth', { ...route.params, nickname });
     });
   };
 

@@ -1,6 +1,6 @@
 import Svg, { Path } from 'react-native-svg';
 
-function CheckIcon({ color }: { color: string }) {
+function ChevronLeftIcon({ color }: { color: string }) {
   return (
     <Svg width="24" height="24" viewBox="0 0 24 24" fill="none">
       <Path
@@ -14,4 +14,4 @@ function CheckIcon({ color }: { color: string }) {
   );
 }
 
-export default CheckIcon;
+export default ChevronLeftIcon;

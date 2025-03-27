@@ -5,11 +5,26 @@ import HomeIcon from '@/assets/svg/HomeIcon';
 import ChartIcon from '@/assets/svg/ChartIcon';
 import SearchIcon from '@/assets/svg/SearchIcon';
 import HamburgerIcon from '@/assets/svg/HamburgerIcon';
-import { styles } from './TabLayout.styles';
 import * as Haptics from 'expo-haptics';
+import { StyleSheet } from 'react-native';
 
 const ACTIVE_COLOR = '#021730';
 const INACTIVE_COLOR = '#99A5B4';
+
+const styles = StyleSheet.create({
+  tab: {
+    display: 'flex',
+    backgroundColor: '#fff',
+    paddingTop: 4,
+    paddingHorizontal: 18,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  label: {
+    fontSize: 12,
+    fontWeight: '600',
+  },
+});
 
 export default function TabLayout() {
   const insets = useSafeAreaInsets();

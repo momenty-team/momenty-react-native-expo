@@ -19,6 +19,7 @@ function UserInfo() {
       injectedJavaScript={injectionTemplate()}
       onMessage={handleMessage}
       style={{ flex: 1, paddingTop: insets.top }}
+      sharedCookiesEnabled={true}
     />
   );
 }
