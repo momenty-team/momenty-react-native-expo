@@ -14,10 +14,14 @@ export default function AddLog() {
   const [stepStack, setStepStack] = React.useState<string[]>([]);
 
   const handleMessage = (event: WebViewMessageEvent) => {
-    const { history } = JSON.parse(event.nativeEvent.data);
+    const { history, route } = JSON.parse(event.nativeEvent.data);
 
     if (history && history?.funnel) {
       if (!stepStack.includes(history.funnel)) setStepStack((prev) => [...prev, history.funnel]);
+    }
+
+    if (route === '/') {
+      router.back();
     }
   };
 
