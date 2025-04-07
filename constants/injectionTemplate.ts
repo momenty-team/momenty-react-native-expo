@@ -37,8 +37,7 @@ export const injectionTemplate = (config?: InjectionTemplate) => {
     return '';
   };
 
-  const shouldIncludeCSS =
-    safeAreaTopInsetTemplate(safeAreaTopInset)!! || disableSelection || (css && css.length > 0);
+  const shouldIncludeCSS = safeAreaTopInsetTemplate(safeAreaTopInset)!|| disableSelection || (css && css.length > 0);
 
   const cssTemplate =
     shouldIncludeCSS &&

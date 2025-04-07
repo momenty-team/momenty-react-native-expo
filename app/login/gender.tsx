@@ -1,8 +1,6 @@
-import { useRouter } from 'expo-router';
 import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { GestureResponderEvent } from 'react-native';
 import type { LoginParamList } from '@/types';
 
 export default function Gender({

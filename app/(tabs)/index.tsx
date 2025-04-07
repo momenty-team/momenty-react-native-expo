@@ -1,29 +1,30 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
+import { useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
+import Toast from 'react-native-toast-message';
 
 import type { WebViewMessageEvent } from 'react-native-webview';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 import { navigateFromWebView } from '@/utils';
 import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
+import CheckIcon from '@/assets/svg/CheckIcon';
 
 export default function HomeScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const webViewRef = useRef<WebView>(null);
+  const mainWebviewRef = useRef<WebView>(null);
   const insets = useSafeAreaInsets();
   const [notchHeight, setNotchHeight] = useState(0);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-
-  useEffect(() => {
-    setNotchHeight(insets.top);
-  }, [insets]);
+  const [bottomSheetRoute, setBottomSheetRoute] = useState<string | null>(null);
 
   const handleMessage = (event: WebViewMessageEvent) => {
-    const { bottomSheet, route, haptic, message } = JSON.parse(event.nativeEvent.data);
+    const { bottomSheet, route, haptic, message, toast } = JSON.parse(event.nativeEvent.data);
 
     if (message) {
       console.log(message);
@@ -33,15 +34,25 @@ export default function HomeScreen() {
       navigateFromWebView(route);
     }
 
+    if (toast) {
+      showToast(toast.type, toast.message);
+    }
+
     if (bottomSheet) {
       if (bottomSheet.state === 'open') {
         bottomSheetRef.current?.snapToIndex(bottomSheet.snapIndex);
+
+        setBottomSheetRoute(bottomSheet.webviewRoute);
       }
 
       if (bottomSheet.state === 'hold') {
         if (!isBottomSheetOpen && bottomSheet.snapIndex === 0) return;
 
         bottomSheetRef.current?.snapToIndex(bottomSheet.snapIndex);
+      }
+
+      if (bottomSheet.state === 'close') {
+        setBottomSheetRoute(null);
       }
     }
 
@@ -51,7 +62,6 @@ export default function HomeScreen() {
   };
 
   const handleSheetChange = (index: number) => {
-    console.log('handleSheetChange', index);
     if (index === -1) {
       return setIsBottomSheetOpen(false);
     }
@@ -65,9 +75,26 @@ export default function HomeScreen() {
     return setIsBottomSheetOpen(true);
   };
 
+  useEffect(() => {
+    setNotchHeight(insets.top);
+  }, [insets]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      mainWebviewRef?.current?.postMessage(JSON.stringify({ viewState: 'focus' }));
+      webViewRef?.current?.postMessage(JSON.stringify({ viewState: 'focus' }));
+
+      return () => {
+        mainWebviewRef?.current?.postMessage(JSON.stringify({ viewState: 'focusOut' }));
+        webViewRef?.current?.postMessage(JSON.stringify({ viewState: 'focusOut' }));
+      };
+    }, [])
+  );
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <WebView
+        ref={mainWebviewRef}
         source={{ uri: `${WEBVIEW_BASE_URL}` }}
         injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
         onMessage={handleMessage}
@@ -89,13 +116,15 @@ export default function HomeScreen() {
         }}
       >
         <BottomSheetView style={styles.contentContainer}>
-          <WebView
-            ref={webViewRef}
-            source={{ uri: `${WEBVIEW_BASE_URL}/log-detail` }}
-            injectedJavaScript={injectionTemplate()}
-            onMessage={handleMessage}
-            style={styles.contentContainer}
-          />
+          {bottomSheetRoute && (
+            <WebView
+              ref={webViewRef}
+              source={{ uri: `${WEBVIEW_BASE_URL}${bottomSheetRoute}` }}
+              injectedJavaScript={injectionTemplate()}
+              onMessage={handleMessage}
+              style={styles.contentContainer}
+            />
+          )}
         </BottomSheetView>
       </BottomSheet>
     </GestureHandlerRootView>
@@ -120,3 +149,14 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
 });
+
+const showToast = (type: string, message: string) => {
+  Toast.show({
+    type,
+    props: {
+      text1: message,
+      icon: <CheckIcon color="#4CAF50" />,
+    },
+    position: 'top',
+  });
+};
