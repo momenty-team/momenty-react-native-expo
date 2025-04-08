@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, View, Text, Button, Alert } from 'react-native';
+import { StyleSheet, View, Text, Button, Alert, Pressable } from 'react-native';
 import * as Haptics from 'expo-haptics';
 import Toast from 'react-native-toast-message';
 import WarnIcon from '@/assets/svg/WarnIcon';
 import CheckIcon from '@/assets/svg/CheckIcon';
 import * as Notifications from 'expo-notifications';
 import * as Device from 'expo-device';
+import { router } from 'expo-router';
 
 export default function Search() {
   const [expoPushToken, setExpoPushToken] = useState<string | null>(null);
@@ -40,6 +41,9 @@ export default function Search() {
 
   return (
     <View style={styles.container}>
+      <Pressable onPress={() => router.push('/login')}>
+        <Text>Go to Login</Text>
+      </Pressable>
       <Button
         title="성공 토스트"
         onPress={() => {
@@ -56,7 +60,6 @@ export default function Search() {
       />
       <Text style={styles.text}>Search</Text>
 
-      {/* 푸시 알림 상태 출력 */}
       <Text>Expo Push Token:</Text>
       <Text>{expoPushToken ?? '토큰 가져오는 중...'}</Text>
       <Text>알림 권한 상태: {permissionStatus ?? '확인 중...'}</Text>
@@ -110,7 +113,7 @@ async function requestNotificationPermissions() {
   return 'granted';
 }
 
-// ✅ Expo Push Token 가져오는 함수
+// Expo Push Token 가져오는 함수
 async function getExpoPushToken() {
   const permissionStatus = await requestNotificationPermissions();
   if (permissionStatus !== 'granted') {
@@ -122,7 +125,6 @@ async function getExpoPushToken() {
   return token;
 }
 
-// ✅ 푸시 알림 테스트 발송 함수
 async function sendTestNotification(token: string | null) {
   try {
     const response = await fetch('https://api.momenty.co.kr/notification/token', {
@@ -142,7 +144,6 @@ async function sendTestNotification(token: string | null) {
   }
 }
 
-// ✅ 성공 토스트 메시지
 const showSuccessToast = () => {
   Toast.show({
     type: 'success',
@@ -154,7 +155,6 @@ const showSuccessToast = () => {
   });
 };
 
-// ✅ 오류 토스트 메시지
 const showErrorToast = () => {
   Toast.show({
     type: 'error',
