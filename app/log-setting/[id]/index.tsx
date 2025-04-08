@@ -21,7 +21,6 @@ function LogSetting() {
     const { route, toast } = JSON.parse(event.nativeEvent.data);
 
     if (toast) {
-      console.log('toast', toast);
       showToast(toast.type, toast.message);
     }
 

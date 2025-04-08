@@ -16,7 +16,7 @@ export const navigateFromWebView = (route?: BridgeRoute) => {
 
     throw new Error('route가 존재하지 않습니다.');
   } catch (error) {
-    console.log('전달받은 route의 구조가 올바르지 않습니다.');
+    alert('전달받은 route의 구조가 올바르지 않습니다.');
     console.error(error);
   }
 };

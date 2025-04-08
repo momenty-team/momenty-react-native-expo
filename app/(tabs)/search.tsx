@@ -44,6 +44,7 @@ export default function Search() {
       <Pressable onPress={() => router.push('/login')}>
         <Text>Go to Login</Text>
       </Pressable>
+      <Button onPress={() => router.push('/log-setting/12/detail/34')} title="ohohoh" />
       <Button
         title="성공 토스트"
         onPress={() => {

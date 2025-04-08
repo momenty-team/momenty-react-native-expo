@@ -15,8 +15,6 @@ const refreshAccessToken = async () => {
     await CookieManager.set('https://api.momenty.co.kr', { name: 'access_token', value: accessToken });
     await CookieManager.set('https://api.momenty.co.kr', { name: 'refresh_token', value: refreshToken });
 
-    console.log('refreshAccessToken task', refreshToken, accessToken);
-
     const response = await fetch('https://api.momenty.co.kr/token/access-token', {
       method: 'POST',
       credentials: 'include',
@@ -26,12 +24,9 @@ const refreshAccessToken = async () => {
     });
 
     if (response.ok) {
-      console.log('token/access-token response ok');
       const setCookieHeader = response.headers.get('set-cookie');
       
       if (!setCookieHeader) return;
-
-      console.log('setCookieHeader:', setCookieHeader);
 
       const accessTokenMatch = setCookieHeader.match(/access_token=([^;]+)/);
       const refreshTokenMatch = setCookieHeader.match(/refresh_token=([^;]+)/);
@@ -40,23 +35,23 @@ const refreshAccessToken = async () => {
       const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
       
       if (accessToken && refreshToken) {
-        console.log('token/access-token set task');
         await saveAccessToken(accessToken);
         await saveRefreshToken(refreshToken);
 
         await CookieManager.set(WEBVIEW_BASE_URL, { name: 'access_token', value: accessToken });
         await CookieManager.set(WEBVIEW_BASE_URL, { name: 'refresh_token', value: refreshToken });
-        console.log('token/access-token set task finished');
       } else {
-        console.log('filtered Token is null');
+        alert('filtered Token is null');
       }
 
       // await AsyncStorage.setItem('lastRefreshTime', Date.now().toString());
     } else {
       console.error('❌ [refreshAccessToken] !response.ok:');
+      alert('로그인 세션이 만료되었습니다. 다시 로그인 해주세요.');
     }
   } catch (error) {
     console.error('❌ [refreshAccessToken] error:', error);
+    alert('로그인 세션이 만료되었습니다. 다시 로그인 해주세요.');
     // 완전 록드인, 토큰 만료 상태 코드일 때
   }
 };

@@ -10,9 +10,7 @@ export default function Gender({
   const { nickname, birth_date, first_name, last_name } = route.params;
 
   const nextStep = async (gender: 'male' | 'female') => {
-    console.log('asd');
     try {
-      console.log('1111');
       const response = await fetch('https://api.momenty.co.kr/users/register', {
         method: 'POST',
         credentials: 'include',
@@ -29,10 +27,8 @@ export default function Gender({
       });
 
       if (response.ok) {
-        console.log('2222');
         navigation.navigate('explain');
       }
-      console.log('3333');
     } catch (error) {
       console.error(error);
     }
