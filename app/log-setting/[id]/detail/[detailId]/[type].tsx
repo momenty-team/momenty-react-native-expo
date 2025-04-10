@@ -1,14 +1,14 @@
+import { View } from 'react-native';
+import { router, useLocalSearchParams } from 'expo-router';
+import WebView, { WebViewMessageEvent } from 'react-native-webview';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import Toast from 'react-native-toast-message';
 import TopNavigation from '@/components/TopNavigation';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
-import { router, useLocalSearchParams } from 'expo-router';
-import { View } from 'react-native';
-import { useSafeAreaInsets } from 'react-native-safe-area-context';
-// import Toast from 'react-native-toast-message';
-import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import CheckIcon from '@/assets/svg/CheckIcon';
-import Toast from 'react-native-toast-message';
 import { navigateFromWebView } from '@/utils';
+import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
 
 function Detail() {
   const insets = useSafeAreaInsets();
@@ -18,7 +18,11 @@ function Detail() {
   };
 
   const handleMessage = (event: WebViewMessageEvent) => {
-    const { route, toast } = JSON.parse(event.nativeEvent.data);
+    const { route, toast, haptic } = JSON.parse(event.nativeEvent.data);
+
+    if (haptic) {
+      switchWebViewHaptic(haptic);
+    }
 
     if (toast) {
       showToast(toast.type, toast.message);
