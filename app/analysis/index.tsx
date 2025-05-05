@@ -6,6 +6,7 @@ import { injectionTemplate } from '@/constants/injectionTemplate';
 
 import type { WebViewMessageEvent } from 'react-native-webview';
 import { navigateFromWebView } from '@/utils';
+import { View } from 'react-native';
 
 function Analysis() {
   const insets = useSafeAreaInsets();
@@ -20,13 +21,15 @@ function Analysis() {
   };
 
   return (
-    <WebView
-      source={{ uri: `${WEBVIEW_BASE_URL}/analysis` }}
-      injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
-      onMessage={handleMessage}
-      style={{ flex: 1 }}
-      sharedCookiesEnabled={true}
-    />
+    <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#fff' }}>
+      <WebView
+        source={{ uri: `${WEBVIEW_BASE_URL}/analysis` }}
+        injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
+        onMessage={handleMessage}
+        style={{ flex: 1 }}
+        sharedCookiesEnabled={true}
+      />
+    </View>
   );
 }
 

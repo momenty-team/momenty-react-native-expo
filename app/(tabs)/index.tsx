@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Button, StyleSheet } from 'react-native';
+import { StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
-import { router, useFocusEffect } from 'expo-router';
+import { useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
@@ -13,6 +13,7 @@ import { injectionTemplate } from '@/constants/injectionTemplate';
 import { navigateFromWebView } from '@/utils';
 import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
 import CheckIcon from '@/assets/svg/CheckIcon';
+import useSelectedDate from '@/stores/useSelectedDate';
 
 export default function HomeScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null);
@@ -22,10 +23,11 @@ export default function HomeScreen() {
   const [notchHeight, setNotchHeight] = useState(0);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [bottomSheetRoute, setBottomSheetRoute] = useState<string | null>(null);
+  const { day, month, year } = useSelectedDate();
 
   const handleMessage = (event: WebViewMessageEvent) => {
     const { bottomSheet, route, haptic, message, toast } = JSON.parse(event.nativeEvent.data);
-
+    console.log('event.nativeEvent.data', event.nativeEvent.data);
     if (message) {
       console.log(message);
     }
@@ -91,11 +93,17 @@ export default function HomeScreen() {
     }, [])
   );
 
+  const hasDate = day && month && year;
+
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <WebView
         ref={mainWebviewRef}
-        source={{ uri: `${WEBVIEW_BASE_URL}` }}
+        source={{
+          uri: hasDate
+            ? `${WEBVIEW_BASE_URL}?year=${year}&month=${month}&day=${day}`
+            : WEBVIEW_BASE_URL,
+        }}
         injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
         onMessage={handleMessage}
         style={{ flex: 1, backgroundColor: '#F4F6F9' }}
@@ -119,7 +127,9 @@ export default function HomeScreen() {
           {bottomSheetRoute && (
             <WebView
               ref={webViewRef}
-              source={{ uri: `${WEBVIEW_BASE_URL}${bottomSheetRoute}` }}
+              source={{
+                uri: `${WEBVIEW_BASE_URL}${bottomSheetRoute}?year=${year}&month=${month}&day=${day}}`,
+              }}
               injectedJavaScript={injectionTemplate()}
               onMessage={handleMessage}
               style={styles.contentContainer}

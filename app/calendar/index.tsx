@@ -8,13 +8,32 @@ import { navigateFromWebView } from '@/utils';
 import TopNavigation from '@/components/TopNavigation';
 import { router } from 'expo-router';
 import { View } from 'react-native';
+import useSelectedDate from '@/stores/useSelectedDate';
 
 function Calendar() {
   const insets = useSafeAreaInsets();
   const webViewRef = React.useRef<WebView>(null);
+  const { day, month, year } = useSelectedDate();
 
   const handleMessage = (event: WebViewMessageEvent) => {
-    navigateFromWebView(JSON.parse(event.nativeEvent.data).route);
+    const { route, date } = JSON.parse(event.nativeEvent.data);
+
+    if (route) {
+      navigateFromWebView(route);
+    }
+
+    if (date) {
+      const { year, month, day } = date;
+
+      const selectedDate = new Date(year, month - 1, day);
+
+      useSelectedDate.setState({
+        day,
+        month,
+        year,
+        selectedDate,
+      });
+    }
   };
 
   const onClickBack = () => {
@@ -26,7 +45,7 @@ function Calendar() {
       <TopNavigation onClickBack={onClickBack} />
       <WebView
         ref={webViewRef}
-        source={{ uri: `${WEBVIEW_BASE_URL}/calendar` }}
+        source={{ uri: `${WEBVIEW_BASE_URL}/calendar?year=${year}&month=${month}&day=${day}` }}
         injectedJavaScript={injectionTemplate()}
         onMessage={handleMessage}
         style={{ flex: 1 }}
