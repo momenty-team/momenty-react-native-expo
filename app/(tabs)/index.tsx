@@ -128,7 +128,7 @@ export default function HomeScreen() {
             <WebView
               ref={webViewRef}
               source={{
-                uri: `${WEBVIEW_BASE_URL}${bottomSheetRoute}?year=${year}&month=${month}&day=${day}}`,
+                uri: `${WEBVIEW_BASE_URL}${bottomSheetRoute}?year=${year}&month=${month}&day=${day}`,
               }}
               injectedJavaScript={injectionTemplate()}
               onMessage={handleMessage}
