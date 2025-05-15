@@ -18,6 +18,18 @@ const permissions: HealthKitPermissions = {
       AppleHealthKit.Constants.Permissions.BloodGlucose,
       AppleHealthKit.Constants.Permissions.StepCount,
       AppleHealthKit.Constants.Permissions.DistanceWalkingRunning,
+      AppleHealthKit.Constants.Permissions.DistanceCycling,
+      AppleHealthKit.Constants.Permissions.FlightsClimbed,
+      AppleHealthKit.Constants.Permissions.RestingHeartRate,
+      AppleHealthKit.Constants.Permissions.BodyTemperature,
+      AppleHealthKit.Constants.Permissions.SleepAnalysis,
+      AppleHealthKit.Constants.Permissions.EnvironmentalAudioExposure,
+      AppleHealthKit.Constants.Permissions.ActivitySummary,
+      AppleHealthKit.Constants.Permissions.HeartRateVariability,
+      AppleHealthKit.Constants.Permissions.HeartbeatSeries,
+      AppleHealthKit.Constants.Permissions.HeadphoneAudioExposure,
+      AppleHealthKit.Constants.Permissions.Workout,
+      AppleHealthKit.Constants.Permissions.SleepAnalysis,
     ],
     write: [],
   },
@@ -38,74 +50,6 @@ export default function Permission({
     });
   };
 
-  const get = () => {
-    // AppleHealthKit.getHeartRateSamples(
-    //   {
-    //     startDate: new Date(2025, 2, 1).toISOString(),
-    //   },
-    //   (error, results) => {
-    //     if (error) {
-    //       console.log('[ERROR] Cannot get sleep samples!', error);
-    //       return;
-    //     }
-
-    //     console.log('[SUCCESS] Sleep samples fetched!', results);
-    //   }
-    // );
-
-    // AppleHealthKit.getDailyDistanceWalkingRunningSamples(
-    //   {
-    //     startDate: new Date(2024, 2, 1).toISOString(),
-    //     period: 2,
-    //   },
-    //   (error, results) => {
-    //     if (error) {
-    //       console.log('[ERROR] Cannot get sleep samples!', error);
-    //       return;
-    //     }
-
-    //     console.log('[SUCCESS] Sleep samples fetched!', results);
-    //   }
-    // );
-
-    AppleHealthKit.getActiveEnergyBurned(
-      {
-        startDate: new Date(2025, 2, 1).toISOString(),
-      },
-      (error, results) => {
-        if (error) {
-          console.log('[ERROR] Cannot get sleep samples!', error);
-          return;
-        }
-
-        console.log('[SUCCESS] Sleep samples fetched!', results);
-      }
-    );
-
-    // AppleHealthKit.getBiologicalSex({}, (error, results) => {
-    //   if (error) {
-    //     console.log('[ERROR] Cannot get sleep samples!', error);
-    //     return;
-    //   }
-
-    //   console.log('[SUCCESS] Sleep samples fetched!', results);
-    // });
-
-    // AppleHealthKit.getBloodGlucoseSamples(
-    //   {
-    //     startDate: new Date(2025, 2, 1).toISOString(),
-    //   },
-    //   (error, results) => {
-    //     if (error) {
-    //       console.log('[ERROR] Cannot get sleep samples!', error);
-    //       return;
-    //     }
-
-    //     console.log('[SUCCESS] Sleep samples fetched!', results);
-    //   }
-    // );
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -121,9 +65,6 @@ export default function Permission({
         <Text style={styles.label}>모먼티가 정확하게 분석 할 수 있도록 모두 허용해주세요.</Text>
         <Pressable style={styles.button} onPress={nextStep}>
           <Text style={styles.buttonText}>계속하기</Text>
-        </Pressable>
-        <Pressable style={styles.button} onPress={get}>
-          <Text style={styles.buttonText}>정보 출력</Text>
         </Pressable>
       </View>
     </View>

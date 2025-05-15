@@ -30,6 +30,17 @@ export interface BridgeData {
     type: 'success' | 'error' | 'info';
     message: string;
   }
+  healthKitData?: {
+    activeEnergyBurned: any;
+    distanceWalkingRunning: any;
+    stepCount: any;
+    heartRateSamples: any;
+    heartRateVariabilitySamples: any;
+    restingHeartRateSamples: any;
+    sleepSamples: any;
+    environmentalAudioExposure: any;
+    headphoneAudioExposure: any;
+  }
 }
 
 export type LoginParamList = {

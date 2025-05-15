@@ -6,7 +6,6 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Toast from 'react-native-toast-message';
-
 import type { WebViewMessageEvent } from 'react-native-webview';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
@@ -15,15 +14,19 @@ import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
 import CheckIcon from '@/assets/svg/CheckIcon';
 import useSelectedDate from '@/stores/useSelectedDate';
 
+import { useHealthKitStore } from '@/stores/useKitData';
+import { average, getAllHealthData } from '@/utils/health';
+
 export default function HomeScreen() {
-  const bottomSheetRef = useRef<BottomSheet>(null);
+  const insets = useSafeAreaInsets();
   const webViewRef = useRef<WebView>(null);
   const mainWebviewRef = useRef<WebView>(null);
-  const insets = useSafeAreaInsets();
+  const bottomSheetRef = useRef<BottomSheet>(null);
+  const { day, month, year } = useSelectedDate();
+
   const [notchHeight, setNotchHeight] = useState(0);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [bottomSheetRoute, setBottomSheetRoute] = useState<string | null>(null);
-  const { day, month, year } = useSelectedDate();
 
   const handleMessage = (event: WebViewMessageEvent) => {
     const { bottomSheet, route, haptic, message, toast } = JSON.parse(event.nativeEvent.data);
@@ -32,13 +35,9 @@ export default function HomeScreen() {
       console.log(message);
     }
 
-    if (route) {
-      navigateFromWebView(route);
-    }
+    if (route) navigateFromWebView(route);
 
-    if (toast) {
-      showToast(toast.type, toast.message);
-    }
+    if (toast) showToast(toast.type, toast.message);
 
     if (bottomSheet) {
       if (bottomSheet.state === 'open') {
@@ -53,14 +52,10 @@ export default function HomeScreen() {
         bottomSheetRef.current?.snapToIndex(bottomSheet.snapIndex);
       }
 
-      if (bottomSheet.state === 'close') {
-        setBottomSheetRoute(null);
-      }
+      if (bottomSheet.state === 'close') setBottomSheetRoute(null);
     }
 
-    if (haptic) {
-      switchWebViewHaptic(haptic);
-    }
+    if (haptic) switchWebViewHaptic(haptic);
   };
 
   const handleSheetChange = (index: number) => {
@@ -77,6 +72,43 @@ export default function HomeScreen() {
     return setIsBottomSheetOpen(true);
   };
 
+  const setHealthData = async () => {
+    const startDate = new Date(year, month - 1, day);
+    startDate.setHours(0, 0, 0, 0);
+    const endDate = new Date(year, month - 1, day);
+    endDate.setHours(23, 59, 59, 999);
+
+    const options = {
+      startDate: startDate.toISOString(),
+      endDate: endDate.toISOString(),
+      date: new Date(year, month - 1, day).toISOString(),
+    };
+
+    try {
+      useHealthKitStore.getState().setHealthKitData(await getAllHealthData(options));
+    } catch (error) {
+      console.error('Error fetching health data:', error);
+    }
+  };
+
+  const sendHealthSummaryToWebView = () => {
+    const data = useHealthKitStore.getState().healthKitData;
+
+    const summary = {
+      activeEnergyBurned: average(data.activeEnergyBurned),
+      distanceWalkingRunning: data.distanceWalkingRunning?.value ?? null,
+      stepCount: data.stepCount?.value ?? null,
+      heartRateSamples: average(data.heartRateSamples),
+      heartRateVariabilitySamples: average(data.heartRateVariabilitySamples, 2),
+      restingHeartRateSamples: average(data.restingHeartRateSamples),
+      sleepSamples: data.sleepSamples,
+      environmentalAudioExposure: average(data.environmentalAudioExposure),
+      headphoneAudioExposure: average(data.headphoneAudioExposure),
+    };
+
+    mainWebviewRef?.current?.postMessage(JSON.stringify({ healthKitData: summary }));
+  };
+
   useEffect(() => {
     setNotchHeight(insets.top);
   }, [insets]);
@@ -85,12 +117,13 @@ export default function HomeScreen() {
     React.useCallback(() => {
       mainWebviewRef?.current?.postMessage(JSON.stringify({ viewState: 'focus' }));
       webViewRef?.current?.postMessage(JSON.stringify({ viewState: 'focus' }));
+      setHealthData().then(() => sendHealthSummaryToWebView());
 
       return () => {
         mainWebviewRef?.current?.postMessage(JSON.stringify({ viewState: 'focusOut' }));
         webViewRef?.current?.postMessage(JSON.stringify({ viewState: 'focusOut' }));
       };
-    }, [])
+    }, [setHealthData])
   );
 
   const hasDate = day && month && year;
@@ -107,6 +140,10 @@ export default function HomeScreen() {
         injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
         onMessage={handleMessage}
         style={{ flex: 1, backgroundColor: '#F4F6F9' }}
+        onLoadEnd={async () => {
+          await setHealthData();
+          sendHealthSummaryToWebView();
+        }}
         sharedCookiesEnabled={true}
       />
 

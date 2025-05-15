@@ -1,98 +1,104 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
-import * as AppleAuthentication from 'expo-apple-authentication';
-import { saveAccessToken, saveRefreshToken } from '@/utils/tokenStorage';
-import CookieManager from '@react-native-cookies/cookies';
-import { WEBVIEW_BASE_URL } from '@/constants/environment';
+import React from 'react';
+import { View, Text, StyleSheet, Pressable } from 'react-native';
+// import * as AppleAuthentication from 'expo-apple-authentication';
+// import { saveAccessToken, saveRefreshToken } from '@/utils/tokenStorage';
+// import CookieManager from '@react-native-cookies/cookies';
+// import { WEBVIEW_BASE_URL } from '@/constants/environment';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { LoginParamList } from '@/types';
+import { useRouter } from 'expo-router';
 
 export default function Login({ navigation }: NativeStackScreenProps<LoginParamList, 'index'>) {
-  const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  // const [loading, setLoading] = useState(false);
 
-  const handleAppleLogin = async () => {
-    try {
-      setLoading(true);
+  // const handleAppleLogin = async () => {
+  //   try {
+  //     setLoading(true);
 
-      const credential = await AppleAuthentication.signInAsync({
-        requestedScopes: [
-          AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
-          AppleAuthentication.AppleAuthenticationScope.EMAIL,
-        ],
-      });
+  //     const credential = await AppleAuthentication.signInAsync({
+  //       requestedScopes: [
+  //         AppleAuthentication.AppleAuthenticationScope.FULL_NAME,
+  //         AppleAuthentication.AppleAuthenticationScope.EMAIL,
+  //       ],
+  //     });
 
-      if (credential) {
-        const response = await fetch(
-          `https://api.momenty.co.kr/auth/apple/callback?code=${credential.authorizationCode}&id_token=${credential.identityToken}&state=${credential.state}`,
-          {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-          }
-        );
+  //     if (credential) {
+  //       const response = await fetch(
+  //         `https://api.momenty.co.kr/auth/apple/callback?code=${credential.authorizationCode}&id_token=${credential.identityToken}&state=${credential.state}`,
+  //         {
+  //           method: 'POST',
+  //           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+  //         }
+  //       );
 
-        const result = await response.json();
-        setLoading(false);
+  //       const result = await response.json();
+  //       setLoading(false);
 
-        if (response.ok) {
-          const setCookieHeader = response.headers.get('set-cookie');
+  //       if (response.ok) {
+  //         const setCookieHeader = response.headers.get('set-cookie');
 
-          if (setCookieHeader) {
-            const accessTokenMatch = setCookieHeader.match(/access_token=([^;]+)/);
-            const refreshTokenMatch = setCookieHeader.match(/refresh_token=([^;]+)/);
+  //         if (setCookieHeader) {
+  //           const accessTokenMatch = setCookieHeader.match(/access_token=([^;]+)/);
+  //           const refreshTokenMatch = setCookieHeader.match(/refresh_token=([^;]+)/);
 
-            const accessToken = accessTokenMatch ? accessTokenMatch[1] : null;
-            const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
+  //           const accessToken = accessTokenMatch ? accessTokenMatch[1] : null;
+  //           const refreshToken = refreshTokenMatch ? refreshTokenMatch[1] : null;
 
-            if (accessToken && refreshToken) {
-              await saveAccessToken(accessToken);
-              await saveRefreshToken(refreshToken);
+  //           if (accessToken && refreshToken) {
+  //             await saveAccessToken(accessToken);
+  //             await saveRefreshToken(refreshToken);
 
-              await CookieManager.set(WEBVIEW_BASE_URL, {
-                name: 'access_token',
-                value: accessToken,
-              });
-              await CookieManager.set(WEBVIEW_BASE_URL, {
-                name: 'refresh_token',
-                value: refreshToken,
-              });
-              await CookieManager.set('https://api.momenty.co.kr', {
-                name: 'access_token',
-                value: accessToken,
-              });
-              await CookieManager.set('https://api.momenty.co.kr', {
-                name: 'refresh_token',
-                value: refreshToken,
-              });
+  //             await CookieManager.set(WEBVIEW_BASE_URL, {
+  //               name: 'access_token',
+  //               value: accessToken,
+  //             });
+  //             await CookieManager.set(WEBVIEW_BASE_URL, {
+  //               name: 'refresh_token',
+  //               value: refreshToken,
+  //             });
+  //             await CookieManager.set('https://api.momenty.co.kr', {
+  //               name: 'access_token',
+  //               value: accessToken,
+  //             });
+  //             await CookieManager.set('https://api.momenty.co.kr', {
+  //               name: 'refresh_token',
+  //               value: refreshToken,
+  //             });
 
-              if (credential?.fullName) {
-                navigation.navigate('permission', {
-                  first_name: credential.fullName?.givenName || '',
-                  last_name: credential.fullName?.familyName || '',
-                });
-              } else {
-                navigation.navigate('permission', { first_name: '', last_name: '' });
-              }
-            } else {
-              alert('토큰을 정상적으로 받지 못했습니다.');
-            }
-          }
-        } else {
-          alert(`로그인 실패: ${result}`);
-        }
-      }
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
+  //             if (credential?.fullName) {
+  //               navigation.navigate('permission', {
+  //                 first_name: credential.fullName?.givenName || '',
+  //                 last_name: credential.fullName?.familyName || '',
+  //               });
+  //             } else {
+  //               navigation.navigate('permission', { first_name: '', last_name: '' });
+  //             }
+  //           } else {
+  //             alert('토큰을 정상적으로 받지 못했습니다.');
+  //           }
+  //         }
+  //       } else {
+  //         alert(`로그인 실패: ${result}`);
+  //       }
+  //     }
+  //   } catch (e) {
+  //     console.log(e);
+  //     setLoading(false);
 
-      const error = e as { code?: string };
+  //     const error = e as { code?: string };
 
-      if (error.code === 'ERR_REQUEST_CANCELED') {
-        alert('로그인이 취소되었습니다. 다시 시도해주세요.');
-      } else {
-        alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
-      }
-    }
+  //     if (error.code === 'ERR_REQUEST_CANCELED') {
+  //       alert('로그인이 취소되었습니다. 다시 시도해주세요.');
+  //     } else {
+  //       alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
+  //     }
+  //   }
+  // };
+
+  const nextStep = () => {
+    router.push('/login/permission');
   };
 
   return (
@@ -107,7 +113,7 @@ export default function Login({ navigation }: NativeStackScreenProps<LoginParamL
       </View>
 
       <View style={styles.buttonWrapper}>
-        {loading ? (
+        {/* {loading ? (
           <ActivityIndicator size="large" color="#021730" />
         ) : (
           <AppleAuthentication.AppleAuthenticationButton
@@ -116,8 +122,11 @@ export default function Login({ navigation }: NativeStackScreenProps<LoginParamL
             cornerRadius={12}
             style={styles.appleButton}
             onPress={handleAppleLogin}
-          />
-        )}
+          /> */}
+        {/* )} */}
+        <Pressable onPress={nextStep}>
+          <Text>이동</Text>
+        </Pressable>
         <Text style={styles.label}>로그인 시, 해당 약관에 동의한 것으로 간주합니다.</Text>
       </View>
     </View>
