@@ -1,5 +1,11 @@
 import { Href } from 'expo-router';
 
+export interface CustomHealthValue {
+  startDate: string;
+  endDate: string;
+  value: number;
+}
+
 export type BridgeRoute = Href | 'goBack';
 
 export type HapticType =
@@ -29,7 +35,7 @@ export interface BridgeData {
   toast?: {
     type: 'success' | 'error' | 'info';
     message: string;
-  }
+  };
   healthKitData?: {
     activeEnergyBurned: any;
     distanceWalkingRunning: any;
@@ -40,7 +46,7 @@ export interface BridgeData {
     sleepSamples: any;
     environmentalAudioExposure: any;
     headphoneAudioExposure: any;
-  }
+  };
 }
 
 export type LoginParamList = {

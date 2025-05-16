@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
 import { StyleSheet } from 'react-native';
 import WebView from 'react-native-webview';
@@ -15,7 +16,7 @@ import CheckIcon from '@/assets/svg/CheckIcon';
 import useSelectedDate from '@/stores/useSelectedDate';
 
 import { useHealthKitStore } from '@/stores/useKitData';
-import { average, getAllHealthData } from '@/utils/health';
+import { average, getActivityHealthData, getAllHealthData } from '@/utils/health';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -123,7 +124,7 @@ export default function HomeScreen() {
         mainWebviewRef?.current?.postMessage(JSON.stringify({ viewState: 'focusOut' }));
         webViewRef?.current?.postMessage(JSON.stringify({ viewState: 'focusOut' }));
       };
-    }, [setHealthData])
+    }, [])
   );
 
   const hasDate = day && month && year;
@@ -170,6 +171,23 @@ export default function HomeScreen() {
               injectedJavaScript={injectionTemplate()}
               onMessage={handleMessage}
               style={styles.contentContainer}
+              onLoadEnd={async () => {
+                const endDateObj = new Date(year, month - 1, day);
+                const startDateObj = new Date(year, month - 1, day);
+                startDateObj.setDate(startDateObj.getDate() - 6); // 7일 전으로 설정
+
+                if (bottomSheetRoute === '/healthkit-detail/activity') {
+                  webViewRef?.current?.postMessage(
+                    JSON.stringify({
+                      healthKitData: await getActivityHealthData({
+                        startDate: startDateObj.toISOString(),
+                        endDate: endDateObj.toISOString(),
+                        period: 60 * 24,
+                      }),
+                    })
+                  );
+                }
+              }}
             />
           )}
         </BottomSheetView>
