@@ -4,6 +4,8 @@ export interface CustomHealthValue {
   startDate: string;
   endDate: string;
   value: number;
+  min?: number;
+  max?: number;
 }
 
 export type BridgeRoute = Href | 'goBack';
@@ -18,6 +20,7 @@ export type HapticType =
   | 'ImpactHeavy'
   | 'ImpactRigid'
   | 'ImpactSoft';
+
 export interface BridgeData {
   route?: BridgeRoute;
   bottomSheet?: {

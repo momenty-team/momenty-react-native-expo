@@ -1,6 +1,7 @@
 import BrokenHealthKit from 'react-native-health';
 import type { CustomHealthValue } from '@/types';
 import type { HealthInputOptions } from 'react-native-health';
+import { getDailyAverage } from './processHeartRate';
 
 const NativeModules = require('react-native').NativeModules;
 const {
@@ -67,20 +68,10 @@ export const getAllHealthData = async (options: HealthInputOptions) => ({
 type InputItem = {
   startDate: string;
   endDate: string;
-  data: {
-    startDate: string;
-    endDate: string;
-    value: number;
-  }[];
+  data: CustomHealthValue[];
 };
 
-type OutputItem = {
-  startDate: string;
-  endDate: string;
-  value: number;
-};
-
-function fillMissingDates(input: InputItem): OutputItem[] {
+function fillMissingDates(input: InputItem): CustomHealthValue[] {
   const { startDate, endDate, data } = input;
 
   const start = new Date(startDate);
@@ -88,7 +79,7 @@ function fillMissingDates(input: InputItem): OutputItem[] {
   start.setHours(0, 0, 0, 0);
   end.setHours(0, 0, 0, 0);
 
-  const dateMap = new Map<string, OutputItem>();
+  const dateMap = new Map<string, CustomHealthValue>();
 
   // 📌 data의 날짜 범위를 하루씩 잘라서 맵에 저장
   for (const item of data) {
@@ -104,6 +95,8 @@ function fillMissingDates(input: InputItem): OutputItem[] {
           startDate: cur.toISOString(),
           endDate: next.toISOString(),
           value: item.value,
+          min: item.min,
+          max: item.max,
         });
       }
       cur.setDate(cur.getDate() + 1);
@@ -111,7 +104,7 @@ function fillMissingDates(input: InputItem): OutputItem[] {
   }
 
   // 📌 전체 범위 돌면서 누락된 날짜는 value: 0으로
-  const result: OutputItem[] = [];
+  const result: CustomHealthValue[] = [];
   const current = new Date(start);
 
   while (current <= end) {
@@ -125,6 +118,8 @@ function fillMissingDates(input: InputItem): OutputItem[] {
         startDate: current.toISOString(),
         endDate: next.toISOString(),
         value: 0,
+        min: 0,
+        max: 0,
       });
     }
     current.setDate(current.getDate() + 1);
@@ -153,6 +148,63 @@ export const getActivityHealthData = async (options: HealthInputOptions) => ({
     endDate: options.endDate!,
     data: (await fetchHealthData<CustomHealthValue[]>(options, getDailyStepCountSamples)).map(
       ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+    ),
+  }),
+});
+
+export const getHeartRateHealthData = async (options: HealthInputOptions) => ({
+  heartRateSamples: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: getDailyAverage(
+      (await fetchHealthData<CustomHealthValue[]>(options, getHeartRateSamples)).map(
+        ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+      ),
+      1
+    ),
+  }),
+  heartRateVariabilitySamples: getDailyAverage(
+    (await fetchHealthData<CustomHealthValue[]>(options, getHeartRateVariabilitySamples)).map(
+      ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+    ),
+    3
+  ),
+
+  restingHeartRateSamples: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: getDailyAverage(
+      (await fetchHealthData<CustomHealthValue[]>(options, getRestingHeartRateSamples)).map(
+        ({ startDate, endDate, value }) => ({
+          startDate,
+          endDate,
+          value,
+        })
+      ),
+      1
+    ),
+  }),
+});
+
+export const getAudioExposureHealthData = async (options: HealthInputOptions) => ({
+  environmentalAudioExposure: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: getDailyAverage(
+      (await fetchHealthData<CustomHealthValue[]>(options, getEnvironmentalAudioExposure)).map(
+        ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+      ),
+      1
+    ),
+  }),
+  headphoneAudioExposure: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: getDailyAverage(
+      (await fetchHealthData<CustomHealthValue[]>(options, getHeadphoneAudioExposure)).map(
+        ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+      ),
+      1
     ),
   }),
 });

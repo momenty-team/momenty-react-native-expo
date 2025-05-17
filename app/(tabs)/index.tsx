@@ -16,7 +16,13 @@ import CheckIcon from '@/assets/svg/CheckIcon';
 import useSelectedDate from '@/stores/useSelectedDate';
 
 import { useHealthKitStore } from '@/stores/useKitData';
-import { average, getActivityHealthData, getAllHealthData } from '@/utils/health';
+import {
+  average,
+  getActivityHealthData,
+  getAllHealthData,
+  getAudioExposureHealthData,
+  getHeartRateHealthData,
+} from '@/utils/health';
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -124,7 +130,7 @@ export default function HomeScreen() {
         mainWebviewRef?.current?.postMessage(JSON.stringify({ viewState: 'focusOut' }));
         webViewRef?.current?.postMessage(JSON.stringify({ viewState: 'focusOut' }));
       };
-    }, [])
+    }, [day, month, year])
   );
 
   const hasDate = day && month && year;
@@ -180,6 +186,29 @@ export default function HomeScreen() {
                   webViewRef?.current?.postMessage(
                     JSON.stringify({
                       healthKitData: await getActivityHealthData({
+                        startDate: startDateObj.toISOString(),
+                        endDate: endDateObj.toISOString(),
+                        period: 60 * 24,
+                      }),
+                    })
+                  );
+                }
+
+                if (bottomSheetRoute === '/healthkit-detail/heart-rate') {
+                  webViewRef?.current?.postMessage(
+                    JSON.stringify({
+                      healthKitData: await getHeartRateHealthData({
+                        startDate: startDateObj.toISOString(),
+                        endDate: endDateObj.toISOString(),
+                      }),
+                    })
+                  );
+                }
+
+                if (bottomSheetRoute === '/healthkit-detail/noise') {
+                  webViewRef?.current?.postMessage(
+                    JSON.stringify({
+                      healthKitData: await getAudioExposureHealthData({
                         startDate: startDateObj.toISOString(),
                         endDate: endDateObj.toISOString(),
                         period: 60 * 24,
