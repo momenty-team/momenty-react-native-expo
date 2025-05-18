@@ -6,6 +6,7 @@ import { injectionTemplate } from '@/constants/injectionTemplate';
 
 import type { WebViewMessageEvent } from 'react-native-webview';
 import { navigateFromWebView } from '@/utils';
+import { Linking } from 'react-native';
 
 function User() {
   const insets = useSafeAreaInsets();
@@ -16,7 +17,18 @@ function User() {
   }, [insets]);
 
   const handleMessage = (event: WebViewMessageEvent) => {
-    navigateFromWebView(JSON.parse(event.nativeEvent.data).route);
+    const data = JSON.parse(event.nativeEvent.data);
+    const { route, externalLink } = data;
+
+    if (route) {
+      navigateFromWebView(route);
+    }
+
+    if (externalLink?.url) {
+      Linking.openURL(externalLink.url).catch((err) => {
+        console.error('외부 링크 열기 실패:', err);
+      });
+    }
   };
 
   return (

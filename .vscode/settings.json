@@ -1,5 +1,5 @@
 {
-  "cSpell.words": ["Pressable"],
+  "cSpell.words": ["healthkit", "Pressable"],
   "editor.codeActionsOnSave": {
     "source.fixAll.eslint": "explicit",
     "source.fixAll.stylelint": "explicit",

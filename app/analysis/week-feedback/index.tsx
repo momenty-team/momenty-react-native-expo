@@ -1,6 +1,7 @@
 import TopNavigation from '@/components/TopNavigation';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
+import useSelectedDate from '@/stores/useSelectedDate';
 import { navigateFromWebView } from '@/utils';
 import { router } from 'expo-router';
 import { useRef } from 'react';
@@ -10,9 +11,10 @@ import WebView from 'react-native-webview';
 
 import type { WebViewMessageEvent } from 'react-native-webview';
 
-function WeekAnalysis() {
+function WeekFeedback() {
   const insets = useSafeAreaInsets();
   const webViewRef = useRef<WebView>(null);
+  const { day, month, year } = useSelectedDate();
 
   const onClickBack = () => {
     router.back();
@@ -28,7 +30,7 @@ function WeekAnalysis() {
       <WebView
         ref={webViewRef}
         source={{
-          uri: `${WEBVIEW_BASE_URL}/analysis/week-analysis`,
+          uri: `${WEBVIEW_BASE_URL}/analysis/week-feedback?year=${year}&month=${month}&day=${day}`,
         }}
         injectedJavaScript={injectionTemplate()}
         onMessage={handleMessage}
@@ -39,4 +41,4 @@ function WeekAnalysis() {
   );
 }
 
-export default WeekAnalysis;
+export default WeekFeedback;
