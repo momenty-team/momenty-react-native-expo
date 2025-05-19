@@ -114,7 +114,7 @@ export default function HomeScreen() {
       headphoneAudioExposure: average(data.headphoneAudioExposure),
     };
 
-    mainWebviewRef?.current?.postMessage(JSON.stringify({ healthKitData: summary }));
+    mainWebviewRef?.current?.postMessage(JSON.stringify({ healthKitSummaryData: summary }));
   };
 
   useEffect(() => {

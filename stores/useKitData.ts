@@ -1,7 +1,7 @@
 import type { CustomHealthValue } from '@/types';
 import { create } from 'zustand';
 
-export interface HealthKitData {
+export interface HealthKitSummaryData {
   activeEnergyBurned: CustomHealthValue[];
   distanceWalkingRunning: CustomHealthValue;
   stepCount: CustomHealthValue;
@@ -14,8 +14,8 @@ export interface HealthKitData {
 }
 
 interface HealthKitState {
-  healthKitData: Partial<HealthKitData>;
-  setHealthKitData: (data: Partial<HealthKitData>) => void;
+  healthKitData: Partial<HealthKitSummaryData>;
+  setHealthKitData: (data: Partial<HealthKitSummaryData>) => void;
   clearHealthKitData: () => void;
 }
 

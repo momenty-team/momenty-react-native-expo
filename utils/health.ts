@@ -117,7 +117,7 @@ function fillMissingDates(input: InputItem): CustomHealthValue[] {
       result.push({
         startDate: current.toISOString(),
         endDate: next.toISOString(),
-        value: 0,
+        value: null,
         min: 0,
         max: 0,
       });
@@ -163,12 +163,16 @@ export const getHeartRateHealthData = async (options: HealthInputOptions) => ({
       1
     ),
   }),
-  heartRateVariabilitySamples: getDailyAverage(
-    (await fetchHealthData<CustomHealthValue[]>(options, getHeartRateVariabilitySamples)).map(
-      ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+  heartRateVariabilitySamples: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: getDailyAverage(
+      (await fetchHealthData<CustomHealthValue[]>(options, getHeartRateVariabilitySamples)).map(
+        ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+      ),
+      3
     ),
-    3
-  ),
+  }),
 
   restingHeartRateSamples: fillMissingDates({
     startDate: options.startDate!,
@@ -220,7 +224,7 @@ export const getSleepHealthData = async (options: HealthInputOptions) => ({
 });
 
 export const average = (
-  entries: { value: number }[] | undefined,
+  entries: CustomHealthValue[] | undefined,
   digits: number = 1
 ): number | null => {
   if (!entries || entries.length === 0) return null;

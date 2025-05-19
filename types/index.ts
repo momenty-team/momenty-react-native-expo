@@ -3,7 +3,7 @@ import { Href } from 'expo-router';
 export interface CustomHealthValue {
   startDate: string;
   endDate: string;
-  value: number;
+  value: number | null;
   min?: number;
   max?: number;
 }
@@ -49,6 +49,17 @@ export interface BridgeData {
     sleepSamples: any;
     environmentalAudioExposure: any;
     headphoneAudioExposure: any;
+  };
+  healthKitSummaryData?: {
+    activeEnergyBurned?: number;
+    distanceWalkingRunning?: number;
+    stepCount?: number;
+    heartRateSamples?: number;
+    heartRateVariabilitySamples?: number;
+    restingHeartRateSamples?: number;
+    sleepSamples?: number;
+    environmentalAudioExposure?: number;
+    headphoneAudioExposure?: number;
   };
 }
 
