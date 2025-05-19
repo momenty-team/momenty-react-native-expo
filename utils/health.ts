@@ -209,6 +209,16 @@ export const getAudioExposureHealthData = async (options: HealthInputOptions) =>
   }),
 });
 
+export const getSleepHealthData = async (options: HealthInputOptions) => ({
+  sleepSamples: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: (await fetchHealthData<CustomHealthValue[]>(options, getSleepSamples)).map(
+      ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+    ),
+  }),
+});
+
 export const average = (
   entries: { value: number }[] | undefined,
   digits: number = 1

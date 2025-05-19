@@ -43,7 +43,7 @@ export default function Alarm() {
 
         console.log('Expo Push Token:', expoToken);
 
-        const response = await fetch('https://api.momenty.co.kr/notification/token', {
+        const response = await fetch('https://api.momenty.co.kr/notifications/token', {
           method: 'POST',
           credentials: 'include',
           headers: {

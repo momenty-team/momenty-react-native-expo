@@ -128,7 +128,7 @@ async function getExpoPushToken() {
 
 async function sendTestNotification(token: string | null) {
   try {
-    const response = await fetch('https://api.momenty.co.kr/notification/token', {
+    const response = await fetch('https://api.momenty.co.kr/notifications/token', {
       method: 'POST',
       credentials: 'include',
       headers: {

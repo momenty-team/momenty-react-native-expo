@@ -22,6 +22,7 @@ import {
   getAllHealthData,
   getAudioExposureHealthData,
   getHeartRateHealthData,
+  getSleepHealthData,
 } from '@/utils/health';
 
 export default function HomeScreen() {
@@ -209,6 +210,18 @@ export default function HomeScreen() {
                   webViewRef?.current?.postMessage(
                     JSON.stringify({
                       healthKitData: await getAudioExposureHealthData({
+                        startDate: startDateObj.toISOString(),
+                        endDate: endDateObj.toISOString(),
+                        period: 60 * 24,
+                      }),
+                    })
+                  );
+                }
+
+                if (bottomSheetRoute === '/healthkit-detail/sleep') {
+                  webViewRef?.current?.postMessage(
+                    JSON.stringify({
+                      healthKitData: await getSleepHealthData({
                         startDate: startDateObj.toISOString(),
                         endDate: endDateObj.toISOString(),
                         period: 60 * 24,
