@@ -1,5 +1,5 @@
 import BrokenHealthKit from 'react-native-health';
-import type { CustomHealthValue } from '@/types';
+import type { CustomHealthSleepValue, CustomHealthValue } from '@/types';
 import type { HealthInputOptions } from 'react-native-health';
 import { getDailyAverage } from './processHeartRate';
 
@@ -38,6 +38,38 @@ const fetchHealthData = <T>(
   });
 };
 
+export const calculateTotalSleepTime = (sleepSamples: CustomHealthSleepValue[]) => {
+  const sleepOnly = sleepSamples
+    .filter(sample => sample.value !== "AWAKE")
+    .map(sample => ({
+      start: new Date(sample.startDate).getTime(),
+      end: new Date(sample.endDate).getTime(),
+    }));
+
+  // 1. start 기준으로 정렬
+  const sorted = sleepOnly.sort((a, b) => a.start - b.start);
+
+  // 2. 겹치는 구간 병합
+  const merged: { start: number; end: number }[] = [];
+  for (const interval of sorted) {
+    if (merged.length === 0 || merged[merged.length - 1].end < interval.start) {
+      merged.push({ ...interval });
+    } else {
+      merged[merged.length - 1].end = Math.max(merged[merged.length - 1].end, interval.end);
+    }
+  }
+
+  // 3. 병합된 구간들의 총 수면 시간 계산
+  const totalMillis = merged.reduce((sum, interval) => sum + (interval.end - interval.start), 0);
+
+  const totalMinutes = Math.floor(totalMillis / 1000 / 60);
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+
+  return `${String(hours).padStart(2, '0')}시간 ${String(minutes).padStart(2, '0')}분`;
+};
+
+
 export const getAllHealthData = async (options: HealthInputOptions) => ({
   activeEnergyBurned: await fetchHealthData<CustomHealthValue[]>(options, getActiveEnergyBurned),
   distanceWalkingRunning: await fetchHealthData<CustomHealthValue>(
@@ -54,7 +86,7 @@ export const getAllHealthData = async (options: HealthInputOptions) => ({
     options,
     getRestingHeartRateSamples
   ),
-  sleepSamples: await fetchHealthData<CustomHealthValue[]>(options, getSleepSamples),
+  sleepSamples: calculateTotalSleepTime((await fetchHealthData<CustomHealthSleepValue[]>(options, getSleepSamples))),
   environmentalAudioExposure: await fetchHealthData<CustomHealthValue[]>(
     options,
     getEnvironmentalAudioExposure
@@ -214,13 +246,9 @@ export const getAudioExposureHealthData = async (options: HealthInputOptions) =>
 });
 
 export const getSleepHealthData = async (options: HealthInputOptions) => ({
-  sleepSamples: fillMissingDates({
-    startDate: options.startDate!,
-    endDate: options.endDate!,
-    data: (await fetchHealthData<CustomHealthValue[]>(options, getSleepSamples)).map(
-      ({ startDate, endDate, value }) => ({ startDate, endDate, value })
-    ),
-  }),
+  sleepSamples: (await fetchHealthData<CustomHealthValue[]>(options, getSleepSamples)).map(
+    ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+  ),
 });
 
 export const average = (

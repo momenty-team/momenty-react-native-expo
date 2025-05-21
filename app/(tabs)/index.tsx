@@ -219,12 +219,16 @@ export default function HomeScreen() {
                 }
 
                 if (bottomSheetRoute === '/healthkit-detail/sleep') {
+                  const startDate = new Date(year, month - 1, day);
+                  startDate.setHours(0, 0, 0, 0);
+                  const endDate = new Date(year, month - 1, day);
+                  endDate.setHours(23, 59, 59, 999);
+
                   webViewRef?.current?.postMessage(
                     JSON.stringify({
                       healthKitData: await getSleepHealthData({
-                        startDate: startDateObj.toISOString(),
-                        endDate: endDateObj.toISOString(),
-                        period: 60 * 24,
+                        startDate: startDate.toISOString(),
+                        endDate: endDate.toISOString(),
                       }),
                     })
                   );

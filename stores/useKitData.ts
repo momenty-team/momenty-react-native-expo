@@ -8,7 +8,7 @@ export interface HealthKitSummaryData {
   heartRateSamples: CustomHealthValue[];
   heartRateVariabilitySamples: CustomHealthValue[];
   restingHeartRateSamples: CustomHealthValue[];
-  sleepSamples: CustomHealthValue[];
+  sleepSamples: string;
   environmentalAudioExposure: CustomHealthValue[];
   headphoneAudioExposure: CustomHealthValue[];
 }

@@ -8,10 +8,12 @@ import Toast from 'react-native-toast-message';
 import WebView, { WebViewMessageEvent } from 'react-native-webview';
 import CheckIcon from '@/assets/svg/CheckIcon';
 import { navigateFromWebView } from '@/utils';
+import useSelectedDate from '@/stores/useSelectedDate';
 
 function LogSetting() {
   const insets = useSafeAreaInsets();
   const { id } = useLocalSearchParams();
+  const { day, month, year } = useSelectedDate();
 
   const onClickBack = () => {
     router.back();
@@ -29,16 +31,22 @@ function LogSetting() {
     }
   };
 
+  const hasDate = day && month && year;
+
   return (
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#fff' }}>
       <TopNavigation onClickBack={onClickBack} />
-      <WebView
-        source={{ uri: `${WEBVIEW_BASE_URL}/log-setting/${id}` }}
-        injectedJavaScript={injectionTemplate()}
-        style={{ flex: 1, backgroundColor: '#fff' }}
-        onMessage={handleMessage}
-        sharedCookiesEnabled={true}
-      />
+      {hasDate && (
+        <WebView
+          source={{
+            uri: `${WEBVIEW_BASE_URL}/log-setting/${id}?year=${year}&month=${month}&day=${day}`,
+          }}
+          injectedJavaScript={injectionTemplate()}
+          style={{ flex: 1, backgroundColor: '#fff' }}
+          onMessage={handleMessage}
+          sharedCookiesEnabled={true}
+        />
+      )}
     </View>
   );
 }

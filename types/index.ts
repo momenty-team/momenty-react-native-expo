@@ -8,6 +8,14 @@ export interface CustomHealthValue {
   max?: number;
 }
 
+export interface CustomHealthSleepValue {
+  startDate: string;
+  endDate: string;
+  value: string;
+  min?: number;
+  max?: number;
+}
+
 export type BridgeRoute = Href | 'goBack';
 
 export type HapticType =
