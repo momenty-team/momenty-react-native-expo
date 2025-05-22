@@ -5,6 +5,7 @@ import HomeIcon from '@/assets/svg/HomeIcon';
 import ChartIcon from '@/assets/svg/ChartIcon';
 import SearchIcon from '@/assets/svg/SearchIcon';
 import HamburgerIcon from '@/assets/svg/HamburgerIcon';
+import MapIcon from '@/assets/svg/MapIcon';
 import * as Haptics from 'expo-haptics';
 import { StyleSheet } from 'react-native';
 
@@ -67,6 +68,13 @@ export default function TabLayout() {
           tabBarIcon: ({ focused }) => (
             <SearchIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="map"
+        options={{
+          title: '지도',
+          tabBarIcon: ({ focused }) => <MapIcon color={focused ? ACTIVE_COLOR : INACTIVE_COLOR} />,
         }}
       />
       <Tabs.Screen

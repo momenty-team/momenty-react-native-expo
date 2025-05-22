@@ -41,6 +41,7 @@ export default function Search() {
 
   return (
     <View style={styles.container}>
+      <Button title="지도 보러 가기" onPress={() => router.push('/map')} />
       <Pressable onPress={() => router.push('/login')}>
         <Text>Go to Login</Text>
       </Pressable>

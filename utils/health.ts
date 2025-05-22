@@ -2,6 +2,12 @@ import BrokenHealthKit from 'react-native-health';
 import type { CustomHealthSleepValue, CustomHealthValue } from '@/types';
 import type { HealthInputOptions } from 'react-native-health';
 import { getDailyAverage } from './processHeartRate';
+import processActiveEnergyBurned from './healthkit/processActiveEnergyBurned';
+import processDistanceWalkingRunning from './healthkit/processDistanceWalkingRunning';
+import processStepCountSamples from './healthkit/processStepCountSamples';
+import processHeartRate from './healthkit/processHeartRate';
+import processEnvironmentalAudioExposure from './healthkit/processEnvironmentalAudioExposure';
+import processHeadphoneAudioExposure from './healthkit/processHeadphoneAudioExposure';
 
 const NativeModules = require('react-native').NativeModules;
 const {
@@ -259,3 +265,73 @@ export const average = (
   const total = entries.reduce((sum, e) => sum + (e.value ?? 0), 0);
   return parseFloat((total / entries.length).toFixed(digits));
 };
+
+export const getFormattedHealthKitData = async (options: HealthInputOptions) => ({
+  activeEnergyBurned: processActiveEnergyBurned(
+    (
+      await fetchHealthData<CustomHealthValue[]>({ ...options, period: 15 }, getActiveEnergyBurned)
+    ).map(({ startDate, endDate, value }) => ({ startDate, endDate, value }))
+  ),
+  distanceWalkingRunning: processDistanceWalkingRunning(
+    (
+      await fetchHealthData<CustomHealthValue[]>(
+        { ...options, period: 15 },
+        getDailyDistanceWalkingRunningSamples
+      )
+    ).map(({ startDate, endDate, value }) => ({ startDate, endDate, value }))
+  ),
+  stepCount: processStepCountSamples(
+    (
+      await fetchHealthData<CustomHealthValue[]>(
+        { ...options, period: 15 },
+        getDailyStepCountSamples
+      )
+    ).map(({ startDate, endDate, value }) => ({ startDate, endDate, value }))
+  ),
+  heartRateSamples: processHeartRate(
+    (
+      await fetchHealthData<CustomHealthValue[]>({ ...options, period: 10 }, getHeartRateSamples)
+    ).map(({ startDate, endDate, value }) => ({ startDate, endDate, value }))
+  ),
+  heartRateVariabilitySamples: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: getDailyAverage(
+      (await fetchHealthData<CustomHealthValue[]>(options, getHeartRateVariabilitySamples)).map(
+        ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+      ),
+      3
+    ),
+  }),
+  restingHeartRateSamples: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: getDailyAverage(
+      (await fetchHealthData<CustomHealthValue[]>(options, getRestingHeartRateSamples)).map(
+        ({ startDate, endDate, value }) => ({
+          startDate,
+          endDate,
+          value,
+        })
+      ),
+      1
+    ),
+  }),
+  environmentalAudioExposure: processEnvironmentalAudioExposure(
+    (await fetchHealthData<[]>({ ...options, period: 10 }, getEnvironmentalAudioExposure)).map(
+      ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+    )
+  ),
+  headphoneAudioExposure: processHeadphoneAudioExposure(
+    (await fetchHealthData<[]>({ ...options, period: 10 }, getHeadphoneAudioExposure)).map(
+      ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+    )
+  ),
+  sleepSamples: fillMissingDates({
+    startDate: options.startDate!,
+    endDate: options.endDate!,
+    data: (await fetchHealthData<CustomHealthValue[]>(options, getSleepSamples)).map(
+      ({ startDate, endDate, value }) => ({ startDate, endDate, value })
+    ),
+  }),
+});

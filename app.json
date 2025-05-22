@@ -25,6 +25,8 @@
       },
       "bundleIdentifier": "com.d0dam.momentyreactnativeexpo",
       "infoPlist": {
+        "NSLocationWhenInUseUsageDescription": "현재 위치를 사용하여 지도에 동선을 표시합니다.",
+        "NSLocationAlwaysUsageDescription": "항상 위치를 사용하여 정확한 동선을 추적합니다.",
         "ITSAppUsesNonExemptEncryption": false
       }
     },
