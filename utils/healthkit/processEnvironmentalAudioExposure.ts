@@ -1,20 +1,18 @@
-import type { CustomHealthValue } from '@/types';
-
 type TimeBlock = 'morning' | 'afternoon' | 'evening' | 'night';
 
-type AudioExposure = {
+interface AudioExposure {
   startDate: string;
   endDate: string;
   value: number;
-} & CustomHealthValue;
+};
 
-type SustainedSession = {
+interface SustainedSession {
   start: string;
   end: string;
   average: number;
 };
 
-type SummaryOutput = {
+interface SummaryOutput {
   summary: {
     period: { start: string; end: string };
     averageByTimeOfDay: Record<'morning' | 'afternoon' | 'evening' | 'night', number>;
@@ -24,8 +22,17 @@ type SummaryOutput = {
   };
 };
 
+/**
+ * n분 단위 외부환경 소음 노출량을 SummaryOutput 형식으로 변환.
+ * 하루 단위로 그룹화한 배열을 반환.
+ * threshold는 고수준의 소음 노출을 나누는 기준. 고수준에 해당하면 sustainedHighSessions에 포함됨.
+ * volatility는 소음 변화량의 평균과 표준편차를 포함.
+ * dangerousExposureRatio는 고수준 노출량 / 전체 노출량을 나타냄.
+ */
 export default function processEnvironmentalAudioExposure(data: AudioExposure[]): SummaryOutput {
   if (data.length === 0) throw new Error('No data available');
+  const threshold = 70;
+  let dangerousCount = 0;
 
   const parse = (d: string) => new Date(d);
   const blocks: Record<TimeBlock, number[]> = {
@@ -34,8 +41,6 @@ export default function processEnvironmentalAudioExposure(data: AudioExposure[])
     evening: [],
     night: [],
   };
-  const threshold = 70;
-  let dangerousCount = 0;
 
   let sustained: SustainedSession[] = [];
   let temp: AudioExposure[] = [];

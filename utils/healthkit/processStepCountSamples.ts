@@ -1,26 +1,12 @@
-// type StepSummary = {
-//   date: string;
-//   totalSteps: number;
-//   peakInterval: {
-//     start: string;
-//     end: string;
-//     value: number;
-//   };
-//   peakProportion: number; // peak / totalSteps
-//   sustainedActivityCount: number; // 연속 구간에서 일정 기준 이상 유지한 횟수
-//   stddev: number; // 하루의 걸음 수 편차
-//   dominantPeriod: "morning" | "afternoon" | "evening"; // 시간대 중 가장 걸음 수 많은 구간
-// };
+import type { CustomHealthValue } from '@/types';
 
-import { CustomHealthValue } from '@/types';
-
-type StepData = {
+interface StepData {
   startDate: string;
   endDate: string;
   value: number;
 };
 
-type StepSummary = {
+interface StepSummary {
   date: string;
   totalSteps: number;
   peakInterval: {
@@ -34,13 +20,23 @@ type StepSummary = {
   dominantPeriod: 'morning' | 'afternoon' | 'evening';
 };
 
+
+/**
+ * n분 단위 걸음 수를 StepSummary 형식으로 변환.
+ * 하루 단위로 그룹화한 배열을 반환.
+ * burstThreshold: 고수준 활동을 나누는 기준.
+ * sustainedActivityCount: 연속 구간에서 일정 기준 이상 유지한 횟수.
+ * peakProportion: peak / totalSteps.
+ * sustainedActivityCount:  연속 구간에서 일정 기준 이상 유지한 횟수.
+ * stddev: 하루의 걸음 수 편차.
+ * dominantPeriod:  시간대 중 가장 걸음 수 많은 구간.
+ */
 export default function processStepCountSamples(
   data: CustomHealthValue[],
   burstThreshold = 100
 ): StepSummary[] {
   const groupByDate = new Map<string, StepData[]>();
 
-  // 1. 날짜별로 그룹화
   data.forEach((entry) => {
     const date = new Date(entry.startDate).toISOString().split('T')[0];
     if (!groupByDate.has(date)) groupByDate.set(date, []);
@@ -56,7 +52,6 @@ export default function processStepCountSamples(
     let sustainedCount = 0;
     const values: number[] = [];
 
-    // 시간대별 활동량 집계
     let morning = 0,
       afternoon = 0,
       evening = 0;
@@ -101,6 +96,5 @@ export default function processStepCountSamples(
     });
   }
 
-  // 날짜 오름차순 정렬
   return results.sort((a, b) => a.date.localeCompare(b.date));
 }

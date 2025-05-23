@@ -1,16 +1,16 @@
-type AudioExposure = {
+interface AudioExposure {
   startDate: string;
   endDate: string;
   value: number;
 };
 
-type SustainedSession = {
+interface SustainedSession {
   start: string;
   end: string;
   average: number;
 };
 
-type ExposureSummary = {
+interface ExposureSummary {
   summary: {
     period: { start: string; end: string };
     averageDb: number;
@@ -19,15 +19,21 @@ type ExposureSummary = {
   };
 };
 
+/**
+ * n분 단위 헤드폰 오디오 노출량을 ExposureSummary 형식으로 변환.
+ * 하루 단위로 그룹화한 배열을 반환.
+ * threshold는 고수준의 소음 노출을 나누는 기준. 고수준에 해당하면 sustainedHighSessions에 포함됨.
+ * dangerousExposureRatio는 고수준 노출량 / 전체 노출량을 나타냄.
+ */
 export default function processHeadphoneAudioExposure(data: AudioExposure[]): ExposureSummary {
   if (data.length === 0) throw new Error('데이터가 없습니다');
+  const threshold = 70;
+  let total = 0;
+  let dangerCount = 0;
 
   const sorted = data.sort(
     (a, b) => new Date(a.startDate).getTime() - new Date(b.startDate).getTime()
   );
-  const threshold = 70;
-  let total = 0;
-  let dangerCount = 0;
 
   let sustained: SustainedSession[] = [];
   let temp: AudioExposure[] = [];

@@ -1,6 +1,6 @@
 import type { CustomHealthValue } from '@/types';
 
-type DailySummary = {
+interface DailySummary {
   date: string;
   avg: number;
   min: number;
@@ -15,6 +15,16 @@ type DailySummary = {
   }[];
 };
 
+/**
+ * n분 단위 심박수를 DailySummary 형식으로 변환.
+ * 하루 단위로 그룹화한 배열을 반환.
+ * thresholdHigh 고수준 심박수를 나누는 기준. 고수준에 해당하면 spikes에 포함됨.
+ * thresholdLow 저수준 심박수를 나누는 기준. 저수준에 해당하면 spikes에 포함됨.
+ * suddenChange 급격한 변화량을 나누는 기준. 급격한 변화가 발생하면 spikes에 포함됨.
+ * delta는 이전 값과의 차이를 나타냄.
+ * minTime과 maxTime은 각각 최소/최대 심박수가 발생한 시간을 나타냄.
+ * spikes는 심박수의 급격한 변화가 발생한 시점과 그 값, 이전 값, 변화량을 포함함.
+ */
 export default function processHeartRate(samples: CustomHealthValue[]): DailySummary[] {
   if (samples.length === 0) return [];
 
@@ -66,7 +76,6 @@ export default function processHeartRate(samples: CustomHealthValue[]): DailySum
       const delta = value - prevValue;
       const isSuddenChange = Math.abs(delta) >= suddenChange;
 
-      // sudden spike는 항상 기록
       if (isSuddenChange) {
         spikes.push({
           time: startDate,
@@ -76,7 +85,6 @@ export default function processHeartRate(samples: CustomHealthValue[]): DailySum
         });
       }
 
-      // High threshold 진입 감지
       if (!isInHighZone && value > thresholdHigh) {
         spikes.push({
           time: startDate,
@@ -87,7 +95,6 @@ export default function processHeartRate(samples: CustomHealthValue[]): DailySum
         isInHighZone = true;
       }
 
-      // High threshold 탈출 감지
       if (isInHighZone && value <= thresholdHigh) {
         spikes.push({
           time: startDate,
@@ -98,7 +105,6 @@ export default function processHeartRate(samples: CustomHealthValue[]): DailySum
         isInHighZone = false;
       }
 
-      // Low threshold 진입 감지
       if (!isInLowZone && value < thresholdLow) {
         spikes.push({
           time: startDate,
@@ -109,7 +115,6 @@ export default function processHeartRate(samples: CustomHealthValue[]): DailySum
         isInLowZone = true;
       }
 
-      // Low threshold 탈출 감지
       if (isInLowZone && value >= thresholdLow) {
         spikes.push({
           time: startDate,

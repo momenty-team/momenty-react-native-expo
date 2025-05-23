@@ -3,7 +3,7 @@ import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 import useSelectedDate from '@/stores/useSelectedDate';
 import { navigateFromWebView } from '@/utils';
-import { getFormattedHealthKitData } from '@/utils/health';
+import generateAiPromptHealthKitData from '@/utils/healthkit/generateAiPromptHealthKitData';
 import { router } from 'expo-router';
 import { useRef } from 'react';
 import { Button, View } from 'react-native';
@@ -31,7 +31,7 @@ function WeekFeedback() {
     startDateObj.setDate(startDateObj.getDate() - 6);
 
     try {
-      const result = await getFormattedHealthKitData({
+      const result = await generateAiPromptHealthKitData({
         startDate: startDateObj.toISOString(),
         endDate: endDateObj.toISOString(),
       });

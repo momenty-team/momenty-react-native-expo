@@ -7,23 +7,29 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetView } from '@gorhom/bottom-sheet';
 import Toast from 'react-native-toast-message';
-import type { WebViewMessageEvent } from 'react-native-webview';
 import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 import { navigateFromWebView } from '@/utils';
 import switchWebViewHaptic from '@/utils/switchWebViewHaptic';
 import CheckIcon from '@/assets/svg/CheckIcon';
 import useSelectedDate from '@/stores/useSelectedDate';
-
 import { useHealthKitStore } from '@/stores/useKitData';
+import getHealthKitDailySummary from '@/utils/healthkit/getHealthKitDailySummary';
 import {
-  average,
   getActivityHealthData,
-  getAllHealthData,
   getAudioExposureHealthData,
   getHeartRateHealthData,
   getSleepHealthData,
-} from '@/utils/health';
+} from '@/utils/healthkit/detailHealthKitdata';
+
+import type { WebViewMessageEvent } from 'react-native-webview';
+import type { CustomHealthValue } from '@/types';
+
+const average = (entries: CustomHealthValue[] | undefined, digits: number = 1): number | null => {
+  if (!entries || entries.length === 0) return null;
+  const total = entries.reduce((sum, e) => sum + (e.value ?? 0), 0);
+  return parseFloat((total / entries.length).toFixed(digits));
+};
 
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
@@ -93,7 +99,7 @@ export default function HomeScreen() {
     };
 
     try {
-      useHealthKitStore.getState().setHealthKitData(await getAllHealthData(options));
+      useHealthKitStore.getState().setHealthKitData(await getHealthKitDailySummary(options));
     } catch (error) {
       console.error('Error fetching health data:', error);
     }

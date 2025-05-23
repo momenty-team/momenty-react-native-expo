@@ -13,33 +13,21 @@ type SummaryResult = {
   mostActivePeriod: ActivitySession | null;
 };
 
-// threshold는 변화량임. 바꿔야함.
-//  예시
-// {
-//   "date": "2025-05-20",
-//   "totalEnergy": 327.45,
-//   "highActivitySessions": [ // 활동량이 기준치 이상인 세션들
-//     { "start": "10:00", "end": "10:15", "energy": 51.91 },
-//     { "start": "16:00", "end": "16:15", "energy": 39.72 },
-//     { "start": "21:30", "end": "22:00", "energy": 36.23 }
-//   ],
-//   "mostActivePeriod": { // 가장 active했던 구간
-//     "hour": "16:00~17:00",
-//     "energy": 70.12
-//   }
-// }
-
 function formatDate(dateStr: string): string {
   return new Date(dateStr).toISOString().split('T')[0]; // 'YYYY-MM-DD'
 }
 
+/**
+ * n분 단위 활동 에너지 소모량을 SummaryResult 형식으로 변환.
+ * 하루 단위로 그룹화한 배열을 반환.
+ * threshold는 고수준의 활동 에너지를 나누는 기준. 고수준에 해당하면 highActivitySessions에 포함됨.
+ */
 export default function processActiveEnergyBurned(
   data: CustomHealthValue[],
   threshold = 5
 ): SummaryResult[] {
   const grouped: Record<string, CustomHealthValue[]> = {};
 
-  // 1. Group data by date
   for (const entry of data) {
     const dateKey = formatDate(entry.startDate);
     if (!grouped[dateKey]) {
@@ -48,7 +36,6 @@ export default function processActiveEnergyBurned(
     grouped[dateKey].push(entry);
   }
 
-  // 2. Apply per-day processing
   const results: SummaryResult[] = [];
 
   for (const date in grouped) {

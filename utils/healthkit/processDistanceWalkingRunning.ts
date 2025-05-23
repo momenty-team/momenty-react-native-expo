@@ -17,11 +17,11 @@ type PeakSession = {
 type DailySummary = {
   date: string;
   totalSteps: number;
-  activeMinutes: number;
-  longestActivePeriod: number;
-  firstActivity: string | null;
-  lastActivity: string | null;
-  timeBlocks: Record<TimeBlock, number>;
+  activeMinutes: number; // 활동 시간
+  longestActivePeriod: number; // 가장 길게 활동한 시간 (분)
+  firstActivity: string | null; // 첫 활동 시작 시간
+  lastActivity: string | null; // 마지막 활동 종료 시간
+  timeBlocks: Record<TimeBlock, number>;  // 오전/오후/저녁/야간별 걸음 수
   peakSessions: PeakSession[];
 };
 
@@ -32,20 +32,11 @@ function getTimeBlock(hour: number): TimeBlock {
   return 'night';
 }
 
-// date: 날짜 (yyyy-mm-dd)
-
-// totalSteps: 총 걸음 수 (threshold 이상 구간만 합산)
-
-// activeMinutes: 활동한 총 시간 (15분 단위 누적)
-
-// longestActivePeriod: 가장 길었던 연속 활동 시간 (분)
-
-// firstActivity, lastActivity: 활동 시작 및 종료 시간
-
-// timeBlocks: 오전/오후/저녁/야간별 걸음 합
-
-// peakSessions: 상위 3개 활동 세션 (value 기준)
-
+/**
+ * n분 단위 활동 에너지 소모량을 DailySummary 형식으로 변환.
+ * 하루 단위로 그룹화한 배열을 반환.
+ * threshold는 고수준의 움직임을 나누는 기준. 고수준에 해당하면 peakSessions에 포함됨.
+ */
 export default function processDistanceWalkingRunning(
   data: CustomHealthValue[],
   threshold = 100
@@ -55,7 +46,7 @@ export default function processDistanceWalkingRunning(
   for (const entry of data) {
     const date = new Date(entry.startDate).toISOString().split('T')[0];
     if (!grouped[date]) grouped[date] = [];
-    if (entry.value === null || entry.value === undefined) continue; // 값이 없으면 건너뛰기
+    if (entry.value === null || entry.value === undefined) continue;
     grouped[date].push(entry as StepSession);
   }
 
