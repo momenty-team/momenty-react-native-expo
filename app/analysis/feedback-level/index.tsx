@@ -3,12 +3,18 @@ import { WEBVIEW_BASE_URL } from '@/constants/environment';
 import WebView from 'react-native-webview';
 import { injectionTemplate } from '@/constants/injectionTemplate';
 
-import type { WebViewMessageEvent } from 'react-native-webview';
+import { router } from 'expo-router';
 import { navigateFromWebView } from '@/utils';
 import { View } from 'react-native';
+import TopNavigation from '@/components/TopNavigation';
+import type { WebViewMessageEvent } from 'react-native-webview';
 
-function Analysis() {
+function FeedbackLevel() {
   const insets = useSafeAreaInsets();
+
+  const onClickBack = () => {
+    router.back();
+  };
 
   const handleMessage = (event: WebViewMessageEvent) => {
     navigateFromWebView(JSON.parse(event.nativeEvent.data).route);
@@ -16,8 +22,9 @@ function Analysis() {
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#fff' }}>
+      <TopNavigation onClickBack={onClickBack} />
       <WebView
-        source={{ uri: `${WEBVIEW_BASE_URL}/analysis` }}
+        source={{ uri: `${WEBVIEW_BASE_URL}/analysis/feedback-level` }}
         injectedJavaScript={injectionTemplate()}
         onMessage={handleMessage}
         style={{ flex: 1 }}
@@ -27,4 +34,4 @@ function Analysis() {
   );
 }
 
-export default Analysis;
+export default FeedbackLevel;
