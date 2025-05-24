@@ -76,7 +76,8 @@ export type LoginParamList = {
   permission: { first_name: string; last_name: string };
   nickname: { first_name: string; last_name: string };
   birth: { first_name: string; last_name: string; nickname: string };
-  gender: { first_name: string; last_name: string; nickname: string; birth_date: string };
-  explain: undefined;
+  height: { first_name: string; last_name: string; nickname: string; birth_date: string };
+  weight: { first_name: string; last_name: string; nickname: string; birth_date: string; height: string };
+  gender: { first_name: string; last_name: string; nickname: string; birth_date: string; height: string; weight: string };
   alarm: undefined;
 };

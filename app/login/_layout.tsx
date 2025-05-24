@@ -5,8 +5,9 @@ import Permission from './permission';
 import Nickname from './nickname';
 import Birth from './birth';
 import Gender from './gender';
-import Explain from './explain';
 import Alarm from './alarm';
+import Weight from './weight';
+import Height from './height';
 
 import type { LoginParamList } from '@/types';
 
@@ -19,8 +20,9 @@ function SignupLayout() {
       <Stack.Screen name="permission" component={Permission} />
       <Stack.Screen name="nickname" component={Nickname} />
       <Stack.Screen name="birth" component={Birth} />
+      <Stack.Screen name="weight" component={Weight} />
+      <Stack.Screen name="height" component={Height} />
       <Stack.Screen name="gender" component={Gender} />
-      <Stack.Screen name="explain" component={Explain} />
       <Stack.Screen name="alarm" component={Alarm} />
     </Stack.Navigator>
   );

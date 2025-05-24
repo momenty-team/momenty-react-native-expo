@@ -9,16 +9,15 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { validateBirthDate } from '@/utils/validation';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { LoginParamList } from '@/types';
 
-export default function Birth({
+export default function Height({
   navigation,
   route,
-}: NativeStackScreenProps<LoginParamList, 'birth'>) {
-  const [birthDay, setBirthDay] = useState('');
+}: NativeStackScreenProps<LoginParamList, 'height'>) {
+  const [height, setHeight] = useState('');
   const [isInputFocused, setIsInputFocused] = useState(true);
   const inputRef = useRef<TextInput>(null);
 
@@ -33,42 +32,34 @@ export default function Birth({
   }, []);
 
   const inputHandler = () => {
-    if (!birthDay) {
-      Alert.alert('생년월일을 입력해주세요.');
+    if (!height) {
+      Alert.alert('키를 입력해주세요.');
       return;
     }
 
-    if (!validateBirthDate(birthDay)) {
-      Alert.alert('올바른 생년월일을 입력해주세요. (YYYYMMDD)');
-      return;
-    }
-
-    const year = birthDay.slice(0, 4);
-    const month = birthDay.slice(4, 6);
-    const day = birthDay.slice(6, 8);
-
-    navigation.navigate('height', { ...route.params, birth_date: `${year}-${month}-${day}` });
+    navigation.navigate('weight', { ...route.params, height });
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <View style={styles.titleWrapper}>
-          <Text style={styles.title}>{route.params.nickname}님의 생일을</Text>
-          <Text style={styles.title}>알려주세요.</Text>
+          <Text style={styles.title}>피드백에 필요한 데이터를</Text>
+          <Text style={styles.title}>수집할게요.</Text>
         </View>
-        <Text style={styles.inputLabel}>생년월일 - YYYYMMDD</Text>
+        <Text style={styles.inputLabel}>키 - CM</Text>
         <View style={styles.inputWrapper}>
           <TextInput
             ref={inputRef}
             style={styles.input}
-            placeholder="8자리로 입력해주세요."
-            value={birthDay}
-            onChangeText={setBirthDay}
+            placeholder="키를 입력해주세요."
+            value={height}
+            onChangeText={setHeight}
             onFocus={() => setIsInputFocused(true)}
             onBlur={() => setIsInputFocused(false)}
             keyboardType="number-pad"
           />
+          <Text style={styles.inputSuffix}>cm</Text>
         </View>
       </View>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
@@ -112,6 +103,8 @@ const styles = StyleSheet.create({
     color: '#5A6B7F',
   },
   inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
     marginTop: 4,
     width: '100%',
     height: 48,
@@ -119,6 +112,8 @@ const styles = StyleSheet.create({
     borderColor: '#5A6B7F',
   },
   input: {
+    flex: 1,
+    textAlign: 'right',
     fontFamily: 'SUIT Variable',
     fontSize: 20,
     fontStyle: 'normal',
@@ -126,7 +121,16 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     height: '100%',
     letterSpacing: 0.4,
-    width: '100%',
+  },
+  inputSuffix: {
+    paddingRight: 6,
+    fontFamily: 'SUIT Variable',
+    fontSize: 20,
+    fontStyle: 'normal',
+    fontWeight: '600',
+    lineHeight: 28,
+    color: '#021730',
+    marginLeft: 8,
   },
   buttonFocus: {
     backgroundColor: '#021730',

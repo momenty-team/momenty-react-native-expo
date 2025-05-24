@@ -60,7 +60,7 @@ export default function Alarm() {
         Toast.show({
           type: 'success',
           props: {
-            text1: '가입 성공!',
+            text1: '가입을 완료했어요!',
             icon: <CheckIcon color="#4CAF50" />,
           },
           position: 'top',

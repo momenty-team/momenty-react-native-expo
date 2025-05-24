@@ -2,12 +2,12 @@ import React from 'react';
 import { View, Text, StyleSheet, Pressable } from 'react-native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { LoginParamList } from '@/types';
+import { useRouter } from 'expo-router';
+import Toast from 'react-native-toast-message';
 
-export default function Gender({
-  navigation,
-  route,
-}: NativeStackScreenProps<LoginParamList, 'gender'>) {
-  const { nickname, birth_date, first_name, last_name } = route.params;
+export default function Gender({ route }: NativeStackScreenProps<LoginParamList, 'gender'>) {
+  const { nickname, birth_date, first_name, last_name, height, weight } = route.params;
+  const router = useRouter();
 
   const nextStep = async (gender: 'male' | 'female') => {
     try {
@@ -23,14 +23,22 @@ export default function Gender({
           first_name,
           last_name,
           gender,
+          height,
+          weight,
         }),
       });
 
       if (response.ok) {
-        navigation.navigate('explain');
+        router.push('/login/alarm');
       }
     } catch (error) {
       console.error(error);
+      Toast.show({
+        type: 'error',
+        text1: '회원가입에 실패했어요.',
+        text2: '다시 시도해주세요.',
+      });
+      router.push('/login');
     }
   };
 
