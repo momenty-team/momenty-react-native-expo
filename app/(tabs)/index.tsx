@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useRef, useState } from 'react';
-import { StyleSheet } from 'react-native';
+
 import WebView from 'react-native-webview';
 import { useFocusEffect } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -21,6 +21,7 @@ import {
   getHeartRateHealthData,
   getSleepHealthData,
 } from '@/utils/healthkit/detailHealthKitdata';
+import { View, ActivityIndicator, StyleSheet } from 'react-native';
 
 import type { WebViewMessageEvent } from 'react-native-webview';
 import type { CustomHealthValue } from '@/types';
@@ -38,6 +39,7 @@ export default function HomeScreen() {
   const bottomSheetRef = useRef<BottomSheet>(null);
   const { day, month, year } = useSelectedDate();
 
+  const [isLoading, setIsLoading] = useState(true);
   const [notchHeight, setNotchHeight] = useState(0);
   const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
   const [bottomSheetRoute, setBottomSheetRoute] = useState<string | null>(null);
@@ -175,8 +177,14 @@ export default function HomeScreen() {
         }}
       >
         <BottomSheetView style={styles.contentContainer}>
+          {isLoading && (
+            <View style={styles.loaderContainer}>
+              <ActivityIndicator size="large" color="#555" />
+            </View>
+          )}
           {bottomSheetRoute && (
             <WebView
+              key={bottomSheetRoute}
               ref={webViewRef}
               source={{
                 uri: `${WEBVIEW_BASE_URL}${bottomSheetRoute}?year=${year}&month=${month}&day=${day}`,
@@ -185,9 +193,10 @@ export default function HomeScreen() {
               onMessage={handleMessage}
               style={styles.contentContainer}
               onLoadEnd={async () => {
+                setIsLoading(false);
                 const endDateObj = new Date(year, month - 1, day);
                 const startDateObj = new Date(year, month - 1, day);
-                startDateObj.setDate(startDateObj.getDate() - 6); // 7일 전으로 설정
+                startDateObj.setDate(startDateObj.getDate() - 6);
 
                 if (bottomSheetRoute === '/healthkit-detail/activity') {
                   webViewRef?.current?.postMessage(
@@ -264,6 +273,13 @@ const styles = StyleSheet.create({
     marginTop: 10,
     marginBottom: 30,
     justifyContent: 'space-between',
+  },
+  loaderContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'white',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
 });
 

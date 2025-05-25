@@ -1,5 +1,5 @@
-import React from 'react';
-import { StyleSheet, Pressable, View, Text } from 'react-native';
+import React, { useRef, useState } from 'react';
+import { StyleSheet, Pressable, View, Text, Animated } from 'react-native';
 import WebView from 'react-native-webview';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
@@ -13,6 +13,8 @@ function UserInfo() {
   const insets = useSafeAreaInsets();
   const webViewRef = React.useRef<WebView>(null);
   const [isEditMode, setIsEditMode] = React.useState(false);
+  const [isWebViewReady, setIsWebViewReady] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const handleMessage = (event: WebViewMessageEvent) => {
     const { route } = JSON.parse(event.nativeEvent.data);
@@ -34,6 +36,16 @@ function UserInfo() {
     setIsEditMode(true);
   };
 
+  const handleLoadEnd = () => {
+    setIsWebViewReady(true);
+
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#ffffff' }}>
       <TopNavigation onClickBack={onClickBack}>
@@ -43,16 +55,22 @@ function UserInfo() {
           </Pressable>
         )}
       </TopNavigation>
-      <WebView
-        ref={webViewRef}
-        source={{
-          uri: isEditMode ? `${WEBVIEW_BASE_URL}/user/info/edit` : `${WEBVIEW_BASE_URL}/user/info`,
-        }}
-        injectedJavaScript={injectionTemplate()}
-        onMessage={handleMessage}
-        style={{ flex: 1 }}
-        sharedCookiesEnabled={true}
-      />
+      {!isWebViewReady && <View style={styles.loaderContainer} />}
+      <Animated.View style={{ flex: 1, opacity: fadeAnim }}>
+        <WebView
+          onLoadEnd={handleLoadEnd}
+          ref={webViewRef}
+          source={{
+            uri: isEditMode
+              ? `${WEBVIEW_BASE_URL}/user/info/edit`
+              : `${WEBVIEW_BASE_URL}/user/info`,
+          }}
+          injectedJavaScript={injectionTemplate()}
+          onMessage={handleMessage}
+          style={{ flex: 1 }}
+          sharedCookiesEnabled={true}
+        />
+      </Animated.View>
     </View>
   );
 }
@@ -62,6 +80,13 @@ const styles = StyleSheet.create({
     fontSize: 18,
     lineHeight: 28,
     color: '#021730',
+  },
+  loaderContainer: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: '#fff',
+    justifyContent: 'center',
+    alignItems: 'center',
+    zIndex: 10,
   },
 });
 
