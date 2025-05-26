@@ -9,6 +9,21 @@ import { Video, ResizeMode } from 'expo-av';
 
 import { useState } from 'react';
 
+const getRank = (score: string): 'none' | 'bronze' | 'silver' | 'gold' => {
+  const numericScore = Number(score);
+  if (numericScore >= 1 && numericScore <= 2) {
+    return 'none';
+  } else if (numericScore >= 3 && numericScore <= 4) {
+    return 'bronze';
+  } else if (numericScore >= 5 && numericScore <= 7) {
+    return 'silver';
+  } else if (numericScore >= 8 && numericScore <= 10) {
+    return 'gold';
+  } else {
+    throw new Error('Invalid score: must be between 1 and 10');
+  }
+};
+
 interface Feedback {
   title: string;
   level: string;
@@ -24,6 +39,11 @@ function WeekFeedback() {
   const translateYAnim = useRef(new Animated.Value(20)).current;
   const contentFadeAnim = useRef(new Animated.Value(0)).current;
   const contentTranslateYAnim = useRef(new Animated.Value(20)).current;
+  const videoOpacity = useRef(new Animated.Value(0)).current;
+  const videoTranslateY = useRef(new Animated.Value(80)).current;
+  const videoScale = useRef(new Animated.Value(0.2)).current;
+  const medalOpacity = useRef(new Animated.Value(0)).current;
+  const medalScale = useRef(new Animated.Value(1.2)).current;
 
   const onClickBack = () => {
     router.back();
@@ -40,7 +60,7 @@ function WeekFeedback() {
         startDate: startDateObj.toISOString(),
         endDate: endDateObj.toISOString(),
       });
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
       setStep((p) => p + 1);
 
       const res = await fetch(
@@ -106,11 +126,68 @@ function WeekFeedback() {
       ]).start();
     }, 400); // 0.4초 후 시작
 
+    const medalTimeout = setTimeout(() => {
+      Animated.parallel([
+        Animated.timing(medalOpacity, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.ease),
+        }),
+        Animated.sequence([
+          Animated.timing(medalScale, {
+            toValue: 0.96,
+            duration: 200,
+            useNativeDriver: true,
+            easing: Easing.out(Easing.ease),
+          }),
+          Animated.timing(medalScale, {
+            toValue: 1,
+            duration: 200,
+            useNativeDriver: true,
+            easing: Easing.out(Easing.ease),
+          }),
+        ]),
+      ]).start();
+    }, 600); // 0.4초 후 시작
+
     return () => {
       clearTimeout(titleTimeout);
       clearTimeout(contentTimeout);
+      clearTimeout(medalTimeout);
     };
   }, [feedback]);
+
+  useEffect(() => {
+    Animated.parallel([
+      Animated.timing(videoOpacity, {
+        toValue: 1,
+        duration: 800,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.ease),
+      }),
+      Animated.timing(videoTranslateY, {
+        toValue: 0,
+        duration: 600,
+        useNativeDriver: true,
+        easing: Easing.out(Easing.ease),
+      }),
+      Animated.sequence([
+        Animated.timing(videoScale, {
+          toValue: 1.04,
+          duration: 600,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.ease),
+        }),
+        Animated.timing(videoScale, {
+          toValue: 1,
+          duration: 400,
+          useNativeDriver: true,
+          easing: Easing.out(Easing.ease),
+        }),
+      ]),
+    ]).start();
+  }, [step, videoOpacity, videoTranslateY, videoScale]);
 
   return (
     <View style={{ flex: 1, paddingTop: insets.top, backgroundColor: '#fff' }}>
@@ -127,25 +204,29 @@ function WeekFeedback() {
               <Text style={styles.subTitle}>
                 일주일 동안의 데이터를 기반으로 피드백을 제공해요.
               </Text>
-              <Video
-                source={require('../../../assets/glass-beard.mp4')}
-                resizeMode={ResizeMode.CONTAIN} // 이렇게!
-                shouldPlay
-                isLooping
-                isMuted
+
+              <Animated.View
                 style={{
-                  width: 360,
-                  height: 360,
-                  marginRight: 12,
-                  alignSelf: 'center',
-                  backgroundColor: '#fff',
+                  opacity: videoOpacity,
+                  transform: [{ translateY: videoTranslateY }, { scale: videoScale }],
                 }}
-              />
+              >
+                <Video
+                  source={require('../../../assets/glass-beard.mp4')}
+                  resizeMode={ResizeMode.CONTAIN}
+                  shouldPlay
+                  isLooping
+                  isMuted
+                  style={{
+                    width: 360,
+                    height: 360,
+                    marginRight: 12,
+                    alignSelf: 'center',
+                    backgroundColor: '#fff',
+                  }}
+                />
+              </Animated.View>
             </View>
-            {/* <Image
-              source={require('../../../assets/feedback.gif')}
-              style={{ width: 600, height: 600 }}
-            /> */}
             <View style={styles.buttonWrapper}>
               <Text style={styles.label}>
                 {step === 1 && '피드백을 받기 위해 정보를 정리하고 있어요.'}
@@ -178,6 +259,56 @@ function WeekFeedback() {
               <Text style={styles.title}>{feedback.title}</Text>
               <Text style={styles.title}>{`이번주 생활 점수는 ${feedback.level}점!`}</Text>
             </Animated.View>
+            {getRank(feedback.level) === 'gold' && (
+              <Animated.Image
+                source={require('../../../assets/images/gold-level.png')}
+                style={[
+                  styles.medalImage,
+                  {
+                    opacity: medalOpacity,
+                    transform: [{ scale: medalScale }],
+                  },
+                ]}
+              />
+            )}
+
+            {getRank(feedback.level) === 'silver' && (
+              <Animated.Image
+                source={require('../../../assets/images/silver-level.png')}
+                style={[
+                  styles.medalImage,
+                  {
+                    opacity: medalOpacity,
+                    transform: [{ scale: medalScale }],
+                  },
+                ]}
+              />
+            )}
+            {getRank(feedback.level) === 'bronze' && (
+              <Animated.Image
+                source={require('../../../assets/images/bronze-level.png')}
+                style={[
+                  styles.medalImage,
+                  {
+                    opacity: medalOpacity,
+                    transform: [{ scale: medalScale }],
+                  },
+                ]}
+              />
+            )}
+            {getRank(feedback.level) === 'none' && (
+              <Image
+                source={require('../../../assets/images/none-level.png')}
+                style={[
+                  styles.medalImage,
+                  {
+                    opacity: medalOpacity,
+                    transform: [{ scale: medalScale }],
+                  },
+                ]}
+              />
+            )}
+
             <Animated.Text
               style={[
                 styles.content,
@@ -218,6 +349,7 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: '700',
     lineHeight: 40,
+    zIndex: 1,
   },
   subTitle: {
     fontFamily: 'SUIT Variable',
@@ -225,6 +357,7 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     lineHeight: 20,
     color: '#5A6B7F',
+    zIndex: 1,
   },
   content: {
     fontFamily: 'SUIT Variable',
@@ -260,5 +393,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: 500,
     lineHeight: 20,
+  },
+  medalImage: {
+    width: 160,
+    height: 200,
+    marginTop: 48,
+    alignSelf: 'center',
+    zIndex: 1,
   },
 });

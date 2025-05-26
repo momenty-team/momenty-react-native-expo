@@ -164,7 +164,7 @@ export default function HomeScreen() {
       />
 
       <BottomSheet
-        snapPoints={['50%', '90%']}
+        snapPoints={['70%', '90%']}
         ref={bottomSheetRef}
         enablePanDownToClose
         enableContentPanningGesture={false}
