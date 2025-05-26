@@ -3,8 +3,9 @@ import useSelectedDate from '@/stores/useSelectedDate';
 import generateAiPromptHealthKitData from '@/utils/healthkit/generateAiPromptHealthKitData';
 import { router } from 'expo-router';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
-import { View, Text, StyleSheet, Pressable, Animated, Easing } from 'react-native';
+import { View, Text, StyleSheet, Pressable, Animated, Easing, Image } from 'react-native';
 import { useEffect, useRef } from 'react';
+import { Video, ResizeMode } from 'expo-av';
 
 import { useState } from 'react';
 
@@ -126,8 +127,25 @@ function WeekFeedback() {
               <Text style={styles.subTitle}>
                 일주일 동안의 데이터를 기반으로 피드백을 제공해요.
               </Text>
+              <Video
+                source={require('../../../assets/glass-beard.mp4')}
+                resizeMode={ResizeMode.CONTAIN} // 이렇게!
+                shouldPlay
+                isLooping
+                isMuted
+                style={{
+                  width: 360,
+                  height: 360,
+                  marginRight: 12,
+                  alignSelf: 'center',
+                  backgroundColor: '#fff',
+                }}
+              />
             </View>
-            <Text>짱짱 마법사! 나는야 멋쟁이</Text>
+            {/* <Image
+              source={require('../../../assets/feedback.gif')}
+              style={{ width: 600, height: 600 }}
+            /> */}
             <View style={styles.buttonWrapper}>
               <Text style={styles.label}>
                 {step === 1 && '피드백을 받기 위해 정보를 정리하고 있어요.'}

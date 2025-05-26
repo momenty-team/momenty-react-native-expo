@@ -153,9 +153,9 @@ export default function HomeScreen() {
             ? `${WEBVIEW_BASE_URL}?year=${year}&month=${month}&day=${day}`
             : WEBVIEW_BASE_URL,
         }}
-        injectedJavaScript={injectionTemplate({ options: { safeAreaTopInset: notchHeight } })}
+        injectedJavaScript={injectionTemplate()}
         onMessage={handleMessage}
-        style={{ flex: 1, backgroundColor: '#F4F6F9' }}
+        style={{ flex: 1, backgroundColor: '#F4F6F9', paddingTop: notchHeight }}
         onLoadEnd={async () => {
           await setHealthData();
           sendHealthSummaryToWebView();
