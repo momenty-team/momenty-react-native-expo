@@ -21,16 +21,14 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
     const latestLocation = locations[0];
     if (latestLocation) {
       const { latitude, longitude } = latestLocation.coords;
-      console.log(`[BG] 위치 전송: ${latitude}, ${longitude}`);
 
       try {
-        const res = await fetch('https://api.momenty.co.kr/locations', {
+        await fetch('https://api.momenty.co.kr/locations', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           credentials: 'include',
           body: JSON.stringify({ latitude, longitude }),
         });
-        console.log('[BG] 위치 전송 결과:', res.status);
       } catch (err) {
         console.warn('[BG] 위치 전송 실패:', err);
       }

@@ -39,6 +39,7 @@ export default function MapPage() {
   const mapRef = useRef<MapView>(null);
   const [path, setPath] = useState<{ latitude: number; longitude: number }[]>([]);
   const [distance, setDistance] = useState<number | null>(null);
+  const [isFirstUpdate, setIsFirstUpdate] = useState(true);
   const [currentLocation, setCurrentLocation] = useState<{
     latitude: number;
     longitude: number;
@@ -57,7 +58,6 @@ export default function MapPage() {
           headers: { 'Content-Type': 'application/json' },
         }
       );
-      console.log('초기 위치 데이터 불러오기', res);
       if (!res.ok) throw new Error('위치 데이터를 불러오지 못했습니다.');
       const data: { locations: locationData[] } = await res.json();
       if (data.locations.length > 0) {
@@ -105,17 +105,23 @@ export default function MapPage() {
         (location) => {
           const { latitude, longitude } = location.coords;
           const newPosition = { latitude, longitude };
+
           setCurrentLocation(newPosition);
           setPath((prev) => {
             const updated = [...prev, newPosition];
             setDistance(getTotalDistanceFromCoords(updated));
             return updated;
           });
-          mapRef.current?.animateToRegion({
-            ...newPosition,
-            latitudeDelta: 0.01,
-            longitudeDelta: 0.01,
-          });
+
+          // 👇 이 부분만 수정됨
+          if (isFirstUpdate) {
+            mapRef.current?.animateToRegion({
+              ...newPosition,
+              latitudeDelta: 0.01,
+              longitudeDelta: 0.01,
+            });
+            setIsFirstUpdate(false); // 이후에는 더 이상 자동 줌 변경하지 않음
+          }
         }
       );
     };
@@ -140,12 +146,6 @@ export default function MapPage() {
 
   return (
     <View style={styles.container}>
-      {/* <View style={styles.distanceOverlay}>
-        <Text style={styles.distanceText}>
-          오늘의 이동 거리 :{' '}
-          {distance !== null ? `${(distance / 1000).toFixed(2)} km` : '계산 중...'}
-        </Text>
-      </View> */}
       <TouchableOpacity style={styles.button} onPress={moveToCurrentLocation}>
         <MyLocationIcon color="#021730" />
       </TouchableOpacity>
@@ -163,13 +163,6 @@ export default function MapPage() {
           <Marker coordinate={path[0]}>
             <View style={styles.startPin}>
               <Text style={styles.startPinText}>S</Text>
-            </View>
-          </Marker>
-        )}
-        {path.length > 1 && (
-          <Marker coordinate={path[path.length - 1]}>
-            <View style={{ backgroundColor: '#FFF1C2', padding: 10, borderRadius: 20 }}>
-              <Text style={{ color: '#333' }}>도착 위치</Text>
             </View>
           </Marker>
         )}
