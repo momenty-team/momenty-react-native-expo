@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Pressable, ActivityIndicator } from 'react-native';
+import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import { saveAccessToken, saveRefreshToken } from '@/utils/tokenStorage';
 import CookieManager from '@react-native-cookies/cookies';
@@ -7,10 +7,8 @@ import { WEBVIEW_BASE_URL } from '@/constants/environment';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { LoginParamList } from '@/types';
-import { useRouter } from 'expo-router';
 
 export default function Login({ navigation }: NativeStackScreenProps<LoginParamList, 'index'>) {
-  const router = useRouter();
   const [loading, setLoading] = useState(false);
 
   const handleAppleLogin = async () => {
@@ -98,10 +96,6 @@ export default function Login({ navigation }: NativeStackScreenProps<LoginParamL
     }
   };
 
-  const nextStep = () => {
-    router.push('/login/permission');
-  };
-
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
@@ -125,9 +119,6 @@ export default function Login({ navigation }: NativeStackScreenProps<LoginParamL
             onPress={handleAppleLogin}
           />
         )}
-        <Pressable onPress={nextStep}>
-          <Text>이동</Text>
-        </Pressable>
         <Text style={styles.label}>로그인 시, 해당 약관에 동의한 것으로 간주합니다.</Text>
       </View>
     </View>
