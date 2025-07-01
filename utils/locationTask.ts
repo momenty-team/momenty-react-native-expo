@@ -30,7 +30,7 @@ TaskManager.defineTask(LOCATION_TASK_NAME, async ({ data, error }) => {
           body: JSON.stringify({ latitude, longitude }),
         });
       } catch (err) {
-        console.warn('[BG] 위치 전송 실패:', err);
+        console.log('[BG] 위치 전송 실패:', err);
       }
     }
   }

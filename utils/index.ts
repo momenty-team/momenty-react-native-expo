@@ -2,7 +2,7 @@ import { router } from 'expo-router';
 
 import type { BridgeRoute } from '@/types';
 
-export const navigateFromWebView = (route?: BridgeRoute) => {
+export const navigateFromWebView = (route?: BridgeRoute, query?: Record<string, string>) => {
   try {
     if (route === 'goBack') {
       router.back();
@@ -10,6 +10,14 @@ export const navigateFromWebView = (route?: BridgeRoute) => {
     }
 
     if (route) {
+      if (query) {
+        router.push({
+          pathname: route as any,
+          params: query,
+        });
+        return
+      }
+      
       router.push(route);
       return;
     }

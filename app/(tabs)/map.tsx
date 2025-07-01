@@ -173,7 +173,13 @@ export default function MapPage() {
             </View>
           </Marker>
         )}
-        {path.length > 1 && <Polyline coordinates={path} strokeColor="green" strokeWidth={4} />}
+        {path.length > 1 && (
+          <Polyline
+            coordinates={path.slice(46, path.length)}
+            strokeColor="#5A6B7F"
+            strokeWidth={4}
+          />
+        )}
       </MapView>
     </View>
   );
@@ -224,13 +230,15 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
-    backgroundColor: '#69B1FF',
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    backgroundColor: '#59A7FC',
+    width: 24,
+    height: 24,
+    opacity: 0.9,
+    backdropFilter: 'blur(10px)',
   },
   startPinText: {
     color: 'white',
     fontSize: 16,
-    fontWeight: '800',
+    fontWeight: '600',
   },
 });

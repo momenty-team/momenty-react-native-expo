@@ -10,6 +10,7 @@ import { router } from 'expo-router';
 import { StyleSheet, View, Animated } from 'react-native';
 import useSelectedDate from '@/stores/useSelectedDate';
 import { useRef, useState } from 'react';
+import { useLocalSearchParams } from 'expo-router';
 
 function Calendar() {
   const insets = useSafeAreaInsets();
@@ -17,6 +18,7 @@ function Calendar() {
   const { day, month, year } = useSelectedDate();
   const [isWebViewReady, setIsWebViewReady] = useState(false);
   const fadeAnim = useRef(new Animated.Value(0)).current;
+  const { from } = useLocalSearchParams();
 
   const handleMessage = (event: WebViewMessageEvent) => {
     const { route, date } = JSON.parse(event.nativeEvent.data);
@@ -61,7 +63,11 @@ function Calendar() {
         <WebView
           onLoadEnd={handleLoadEnd}
           ref={webViewRef}
-          source={{ uri: `${WEBVIEW_BASE_URL}/calendar?year=${year}&month=${month}&day=${day}` }}
+          source={{
+            uri: `${WEBVIEW_BASE_URL}/calendar?year=${year}&month=${month}&day=${day}&from=${
+              from || ''
+            }`,
+          }}
           injectedJavaScript={injectionTemplate()}
           onMessage={handleMessage}
           style={{ flex: 1 }}

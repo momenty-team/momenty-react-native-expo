@@ -14,6 +14,14 @@ function Analysis() {
   const fadeAnim = useRef(new Animated.Value(0)).current;
 
   const handleMessage = (event: WebViewMessageEvent) => {
+    const { route } = JSON.parse(event.nativeEvent.data);
+    if (route === '/calendar?from=analysis') {
+      const [pathname, queryString] = route.split('?');
+      const query = Object.fromEntries(new URLSearchParams(queryString));
+      navigateFromWebView(pathname, query);
+      return;
+    }
+
     navigateFromWebView(JSON.parse(event.nativeEvent.data).route);
   };
 
