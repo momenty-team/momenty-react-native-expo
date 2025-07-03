@@ -29,8 +29,11 @@ interface SummaryOutput {
  * volatility는 소음 변화량의 평균과 표준편차를 포함.
  * dangerousExposureRatio는 고수준 노출량 / 전체 노출량을 나타냄.
  */
-export default function processEnvironmentalAudioExposure(data: AudioExposure[]): SummaryOutput {
-  if (data.length === 0) throw new Error('No data available');
+export default function processEnvironmentalAudioExposure(data: AudioExposure[]): SummaryOutput | null {
+  if (data.length === 0) {
+    return null;
+  };
+  
   const threshold = 70;
   let dangerousCount = 0;
 

@@ -25,8 +25,11 @@ interface ExposureSummary {
  * threshold는 고수준의 소음 노출을 나누는 기준. 고수준에 해당하면 sustainedHighSessions에 포함됨.
  * dangerousExposureRatio는 고수준 노출량 / 전체 노출량을 나타냄.
  */
-export default function processHeadphoneAudioExposure(data: AudioExposure[]): ExposureSummary {
-  if (data.length === 0) throw new Error('데이터가 없습니다');
+export default function processHeadphoneAudioExposure(data: AudioExposure[]): ExposureSummary | null {
+  if (data.length === 0) {
+    return null;
+  }
+
   const threshold = 70;
   let total = 0;
   let dangerCount = 0;
