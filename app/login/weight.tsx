@@ -61,6 +61,10 @@ export default function Weight({
           />
           <Text style={styles.inputSuffix}>kg</Text>
         </View>
+        <View style={styles.textWrapper}>
+          <Text style={styles.text}>모먼티가 기록들을 더 자세히 분석하고</Text>
+          <Text style={styles.text}>정확한 피드백을 전달하기 위해서 필요해요.</Text>
+        </View>
       </View>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
         <Pressable
@@ -131,6 +135,18 @@ const styles = StyleSheet.create({
     lineHeight: 28,
     color: '#021730',
     marginLeft: 8,
+  },
+  textWrapper: {
+    display: 'flex',
+    width: '100%',
+    marginTop: 28,
+  },
+  text: {
+    fontFamily: 'SUIT Variable',
+    fontSize: 16,
+    fontWeight: '500',
+    lineHeight: 20,
+    color: '#5A6B7F',
   },
   buttonFocus: {
     backgroundColor: '#021730',

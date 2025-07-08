@@ -10,7 +10,7 @@ interface TopNavigationProps {
 export default function TopNavigation({ children, onClickBack }: TopNavigationProps) {
   return (
     <View style={styles.header}>
-      <Pressable onPress={onClickBack} style={styles.wrapper}>
+      <Pressable onPress={onClickBack}>
         <ChevronLeftIcon color="#021730" />
       </Pressable>
       <View style={styles.childrenContainer}>{children}</View>
@@ -30,14 +30,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
   },
   childrenContainer: {
     alignItems: 'center',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-  },
-  wrapper: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
   },
 });
