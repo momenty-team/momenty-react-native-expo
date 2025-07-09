@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     borderRadius: 12,
     alignItems: 'center',
-    marginTop: 32,
+    marginTop: 16,
   },
   buttonText: {
     fontFamily: 'SUIT Variable',
